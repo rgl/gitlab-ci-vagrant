@@ -167,6 +167,12 @@ try {
     $ErrorActionPreference = 'Stop'
 }
 
+# configure the gitlab runner.
+# see https://docs.gitlab.com/runner/configuration/advanced-configuration.html
+(Get-Content $gitLabRunnerConfigPath) `
+    -replace '^(concurrent\s*=).*','$1 3' `
+    | Set-Content -Encoding ascii $gitLabRunnerConfigPath
+
 # install the gitlab-runner service.
 &$gitLabRunnerPath `
     install `
