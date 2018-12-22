@@ -134,12 +134,13 @@ $acl.AddAccessRule((
 $gitLabRunnerWorkspaceDirectory.SetAccessControl($acl)
 
 # download the binary and install it.
+# see https://gitlab.com/gitlab-org/gitlab-runner/tags
 # see https://docs.gitlab.com/runner/install/bleeding-edge.html#download-any-other-tagged-release
 $gitLabRunnerConfigPath = "$gitLabRunnerDirectory\bin\config.toml"
 $gitLabRunnerPath = "$gitLabRunnerDirectory\bin\gitlab-runner.exe"
 mkdir "$gitLabRunnerDirectory\bin" | Out-Null
 (New-Object Net.WebClient).DownloadFile(
-    'https://gitlab-runner-downloads.s3.amazonaws.com/v11.3.1/binaries/gitlab-runner-windows-amd64.exe',
+    'https://gitlab-runner-downloads.s3.amazonaws.com/v11.6.0/binaries/gitlab-runner-windows-amd64.exe',
     $gitLabRunnerPath)
 
 # register the gitlab runner with gitlab.
