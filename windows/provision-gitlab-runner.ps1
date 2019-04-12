@@ -187,6 +187,7 @@ if ($LASTEXITCODE) {
 
 # grant the logon as service permission to the gitlab-runner account.
 choco install -y carbon
+Import-Module Carbon
 Grant-Privilege $gitLabRunnerAccountName 'SeServiceLogonRight'
 
 # start the service.
