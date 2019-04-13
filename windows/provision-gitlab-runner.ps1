@@ -156,8 +156,8 @@ try {
         --config $gitLabRunnerConfigPath `
         --url "https://$config_gitlab_fqdn" `
         --registration-token $gitLabRunnerRegistrationToken `
-        --tag-list 'windows,vs2017' `
-        --description 'Visual Studio 2017 / Windows' `
+        --tag-list 'windows,vs2019' `
+        --description 'Visual Studio 2019 / Windows' `
         --locked=false `
         --executor shell `
         --shell powershell
