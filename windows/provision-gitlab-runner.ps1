@@ -140,7 +140,7 @@ $gitLabRunnerConfigPath = "$gitLabRunnerDirectory\bin\config.toml"
 $gitLabRunnerPath = "$gitLabRunnerDirectory\bin\gitlab-runner.exe"
 mkdir "$gitLabRunnerDirectory\bin" | Out-Null
 (New-Object Net.WebClient).DownloadFile(
-    'https://gitlab-runner-downloads.s3.amazonaws.com/v11.11.1/binaries/gitlab-runner-windows-amd64.exe',
+    'https://gitlab-runner-downloads.s3.amazonaws.com/v12.0.2/binaries/gitlab-runner-windows-amd64.exe',
     $gitLabRunnerPath)
 
 # register the gitlab runner with gitlab.
