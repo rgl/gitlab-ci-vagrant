@@ -140,7 +140,7 @@ $gitLabRunnerConfigPath = "$gitLabRunnerDirectory\bin\config.toml"
 $gitLabRunnerPath = "$gitLabRunnerDirectory\bin\gitlab-runner.exe"
 mkdir "$gitLabRunnerDirectory\bin" | Out-Null
 (New-Object Net.WebClient).DownloadFile(
-    'https://gitlab-runner-downloads.s3.amazonaws.com/v12.0.2/binaries/gitlab-runner-windows-amd64.exe',
+    'https://gitlab-runner-downloads.s3.amazonaws.com/v12.2.0/binaries/gitlab-runner-windows-amd64.exe',
     $gitLabRunnerPath)
 
 # register the gitlab runner with gitlab.
@@ -173,6 +173,16 @@ try {
 (Get-Content $gitLabRunnerConfigPath) `
     -replace '^(concurrent\s*=).*','$1 3' `
     | Set-Content -Encoding ascii $gitLabRunnerConfigPath
+
+# let gitlab runner modify the configuration file (it needs to lock it for some reason).
+$acl = Get-Acl $gitLabRunnerConfigPath
+$acl.AddAccessRule((
+    New-Object `
+        Security.AccessControl.FileSystemAccessRule(
+            $gitLabRunnerAccountName,
+            'Modify',
+            'Allow')))
+Set-Acl $gitLabRunnerConfigPath $acl
 
 # install the gitlab-runner service.
 &$gitLabRunnerPath `
