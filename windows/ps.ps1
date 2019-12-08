@@ -16,6 +16,10 @@ trap {
     Exit 1
 }
 
+function Write-Title($title) {
+    Write-Output "#`n# $title`n#"
+}
+
 # wrap the choco command (to make sure this script aborts when it fails).
 function Start-Choco([string[]]$Arguments, [int[]]$SuccessExitCodes=@(0)) {
     $command, $commandArguments = $Arguments
@@ -40,11 +44,22 @@ function choco {
     Start-Choco $Args
 }
 
+# wrap the docker command (to make sure this script aborts when it fails).
+function docker {
+    docker.exe @Args | Out-String -Stream -Width ([int]::MaxValue)
+    if ($LASTEXITCODE) {
+        throw "$(@('docker')+$Args | ConvertTo-Json -Compress) failed with exit code $LASTEXITCODE"
+    }
+}
+
 function Get-DotNetVersion {
     # see https://docs.microsoft.com/en-us/dotnet/framework/migration-guide/how-to-determine-which-versions-are-installed#net_d
     $release = [int](Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full' -Name Release).Release
+    if ($release -ge 528040) {
+        return '4.8 or later'
+    }
     if ($release -ge 461808) {
-        return '4.7.2 or later'
+        return '4.7.2'
     }
     if ($release -ge 461308) {
         return '4.7.1'
