@@ -24,6 +24,16 @@ Vagrant.configure('2') do |config|
     vb.customize ['modifyvm', :id, '--cableconnected1', 'on']
   end
 
+  config.vm.define :ubuntu do |config|
+    config.vm.box = 'ubuntu-18.04-amd64'
+    config.vm.hostname = config_ubuntu_fqdn
+    config.vm.network :private_network, ip: config_ubuntu_ip, libvirt__forward_mode: 'route', libvirt__dhcp_enabled: false
+    config.vm.provision :shell, inline: "echo '#{config_gitlab_ip} #{config_gitlab_fqdn}' >>/etc/hosts"
+    config.vm.provision :shell, path: 'ubuntu/provision-base.sh'
+    config.vm.provision :shell, path: 'ubuntu/provision-docker.sh'
+    config.vm.provision :shell, path: 'ubuntu/provision-gitlab-runner.sh'
+  end
+
   config.vm.define :windows do |config|
     config.vm.provider :libvirt do |lv, config|
       lv.memory = 4096
@@ -52,6 +62,7 @@ Vagrant.configure('2') do |config|
       inline: '''bash -euc \'
 mkdir -p tmp
 artifacts=(
+  ../gitlab-vagrant/tmp/gitlab.example.com-crt.pem
   ../gitlab-vagrant/tmp/gitlab.example.com-crt.der
   ../gitlab-vagrant/tmp/gitlab-runners-registration-token.txt
 )
