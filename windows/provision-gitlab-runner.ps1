@@ -3,7 +3,10 @@ param(
     [string]$config_gitlab_fqdn = 'gitlab.example.com',
 
     [Parameter(Mandatory=$true)]
-    [string]$config_fqdn = 'windows.gitlab.example.com'
+    [string]$config_fqdn = 'windows.gitlab.example.com',
+
+    [Parameter(Mandatory=$true)]
+    [string]$gitlabRunnerVersion = '12.7.1'
 )
 
 # install carbon.
@@ -159,7 +162,7 @@ function Install-GitLabRunner($name, $extraRunnerArguments) {
     $gitLabRunnerPath = "$gitLabRunnerDirectory\bin\gitlab-runner.exe"
     mkdir "$gitLabRunnerDirectory\bin" | Out-Null
     (New-Object Net.WebClient).DownloadFile(
-        'https://gitlab-runner-downloads.s3.amazonaws.com/v12.6.0/binaries/gitlab-runner-windows-amd64.exe',
+        "https://gitlab-runner-downloads.s3.amazonaws.com/v$gitlabRunnerVersion/binaries/gitlab-runner-windows-amd64.exe",
         $gitLabRunnerPath)
 
     # register the gitlab runner with gitlab.
