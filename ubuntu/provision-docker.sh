@@ -23,6 +23,7 @@ cat >/etc/docker/daemon.json <<'EOF'
 {
     "experimental": false,
     "debug": false,
+    "log-driver": "journald",
     "labels": [
         "os=linux"
     ],
@@ -31,7 +32,13 @@ cat >/etc/docker/daemon.json <<'EOF'
     ]
 }
 EOF
-sed -i -E 's,^(ExecStart=/usr/bin/dockerd).*,\1,' /lib/systemd/system/docker.service
+# start docker without any command line flags as its entirely configured from daemon.json.
+install -d /etc/systemd/system/docker.service.d
+cat >/etc/systemd/system/docker.service.d/override.conf <<'EOF'
+[Service]
+ExecStart=
+ExecStart=/usr/bin/dockerd
+EOF
 systemctl daemon-reload
 systemctl start docker
 
