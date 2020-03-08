@@ -22,7 +22,8 @@ update-ca-certificates
 
 apt-get install -y --no-install-recommends curl
 wget -qO- https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh | bash
-# TODO even though this installs a gitlab-runner user the daemon is running as root... why?
+# NB the gitlab-runner daemon runs as root and launches jobs as the gitlab-runner user.
+# NB the gitlab-runner daemon manages this node registered runners.
 apt-get install -y "gitlab-runner=$gitlab_runner_version"
 
 # configure the docker runner.
@@ -38,3 +39,12 @@ gitlab-runner \
     --description 'Docker / Ubuntu 18.04' \
     --executor 'docker' \
     --docker-image 'ubuntu:18.04'
+
+# make sure there are no shell configuration files (at least .bash_logout).
+# NB these were copied from the /etc/skel directory when the gitlab-runner
+#    user was created but are not really needed.
+# NB without this the job can fail with an odd error alike:
+#       bash: line 87: cd: /home/gitlab-runner/builds/vhCrXYRX/0/root/hello-pi: No such file or directory
+#       ERROR: Job failed: exit status 1
+#    see https://gitlab.com/gitlab-org/gitlab-runner/issues/4449
+rm -f /home/gitlab-runner/{.bash_logout,.bashrc,.profile}
