@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eux
 
-gitlab_runner_version="${1:-12.8.0}"; shift || true
+gitlab_runner_version="${1:-12.9.0}"; shift || true
 config_fqdn=$(hostname --fqdn)
 config_gitlab_fqdn=$(hostname --domain)
 config_gitlab_runner_registration_token="$(cat /vagrant/tmp/gitlab-runners-registration-token.txt)"

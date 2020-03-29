@@ -1,4 +1,4 @@
-gitlab_runner_version = '12.8.0' # NB execute apt-cache madison gitlab-runner to known the available versions.
+gitlab_runner_version = '12.9.0' # NB execute apt-cache madison gitlab-runner to known the available versions.
 
 # link to the gitlab-vagrant environment:
 config_gitlab_fqdn  = 'gitlab.example.com'
