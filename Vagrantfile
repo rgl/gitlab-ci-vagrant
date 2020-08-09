@@ -27,7 +27,7 @@ Vagrant.configure('2') do |config|
   end
 
   config.vm.define :ubuntu do |config|
-    config.vm.box = 'ubuntu-18.04-amd64'
+    config.vm.box = 'ubuntu-20.04-amd64'
     config.vm.hostname = config_ubuntu_fqdn
     config.vm.network :private_network, ip: config_ubuntu_ip, libvirt__forward_mode: 'route', libvirt__dhcp_enabled: false
     config.vm.provision :shell, inline: "echo '#{config_gitlab_ip} #{config_gitlab_fqdn}' >>/etc/hosts"

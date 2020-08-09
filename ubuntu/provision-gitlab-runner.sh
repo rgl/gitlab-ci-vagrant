@@ -35,10 +35,10 @@ gitlab-runner \
     --registration-token "$config_gitlab_runner_registration_token" \
     --locked=false \
     --env 'GIT_SSL_NO_VERIFY=true' \
-    --tag-list 'docker,ubuntu,ubuntu-18.04' \
-    --description 'Docker / Ubuntu 18.04' \
+    --tag-list 'docker,ubuntu,ubuntu-20.04' \
+    --description 'Docker / Ubuntu 20.04' \
     --executor 'docker' \
-    --docker-image 'ubuntu:18.04'
+    --docker-image 'ubuntu:20.04'
 
 # make sure there are no shell configuration files (at least .bash_logout).
 # NB these were copied from the /etc/skel directory when the gitlab-runner
