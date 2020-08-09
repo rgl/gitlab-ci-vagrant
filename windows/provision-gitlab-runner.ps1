@@ -6,7 +6,7 @@ param(
     [string]$config_fqdn = 'windows.gitlab.example.com',
 
     [Parameter(Mandatory=$true)]
-    [string]$gitlabRunnerVersion = '12.9.0'
+    [string]$gitlabRunnerVersion = '13.2.2'
 )
 
 # install carbon.
