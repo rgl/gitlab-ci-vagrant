@@ -1,4 +1,6 @@
-gitlab_runner_version = '13.3.0' # NB execute apt-cache madison gitlab-runner to known the available versions.
+# NB execute apt-cache madison gitlab-runner to known the available versions.
+#    also see https://gitlab.com/gitlab-org/gitlab-runner/-/tags
+gitlab_runner_version = '13.4.0'
 
 # link to the gitlab-vagrant environment:
 config_gitlab_fqdn  = 'gitlab.example.com'
