@@ -46,9 +46,6 @@ $config = @{
     # see https://github.com/moby/moby/commit/0906195fbbd6f379c163b80f23e4c5a60bcfc5f0
     # see https://github.com/moby/moby/blob/8e610b2b55bfd1bfa9436ab110d311f5e8a74dcb/daemon/listeners/listeners_windows.go#L25
     'group' = 'docker-users'
-    # use the gitlab environment dns server to force containers to resolve our custom domains.
-    # TODO this does not seems to be needed after all...
-    #'dns' = @('10.10.9.99')
     'hosts' = @(
         'tcp://0.0.0.0:2375',
         'npipe:////./pipe/docker_engine'
