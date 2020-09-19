@@ -1,13 +1,13 @@
 # see https://docs.microsoft.com/en-us/virtualization/windowscontainers/manage-docker/configure-docker-daemon
 # see https://docs.docker.com/engine/installation/linux/docker-ce/binaries/#install-server-and-client-binaries-on-windows
-# see https://github.com/docker/docker-ce/releases/tag/v19.03.12
-# see https://github.com/rgl/docker-ce-windows-binaries-vagrant/releases/tag/v19.03.12
+# see https://github.com/docker/docker-ce/releases/tag/v19.03.13
+# see https://github.com/rgl/docker-ce-windows-binaries-vagrant/releases/tag/v19.03.13
 
 # download install the docker binaries.
-$archiveVersion = '19.03.12'
+$archiveVersion = '19.03.13'
 $archiveName = "docker-$archiveVersion.zip"
 $archiveUrl = "https://github.com/rgl/docker-ce-windows-binaries-vagrant/releases/download/v$archiveVersion/$archiveName"
-$archiveHash = '7cd3a1ad3d9d2bdec7c03d24684d78c49769d879d59675a3aa2f910f1a8517a1'
+$archiveHash = 'c51a3f2fc3191e4662df5adc8d3c83f683ab5bcef7928605437ad93cfd38b68a'
 $archivePath = "$env:TEMP\$archiveName"
 Write-Host "Installing docker $archiveVersion..."
 (New-Object System.Net.WebClient).DownloadFile($archiveUrl, $archivePath)
@@ -46,6 +46,9 @@ $config = @{
     # see https://github.com/moby/moby/commit/0906195fbbd6f379c163b80f23e4c5a60bcfc5f0
     # see https://github.com/moby/moby/blob/8e610b2b55bfd1bfa9436ab110d311f5e8a74dcb/daemon/listeners/listeners_windows.go#L25
     'group' = 'docker-users'
+    # use the gitlab environment dns server to force containers to resolve our custom domains.
+    # TODO this does not seems to be needed after all...
+    #'dns' = @('10.10.9.99')
     'hosts' = @(
         'tcp://0.0.0.0:2375',
         'npipe:////./pipe/docker_engine'
