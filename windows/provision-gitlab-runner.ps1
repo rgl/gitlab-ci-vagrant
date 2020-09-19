@@ -48,8 +48,11 @@ choco install -y opencover-rgl.portable -Source $PWD
 Pop-Location
 
 # install troubeshooting tools.
-choco install -y procexp
-choco install -y procmon
+# NB we ignore the checksums because all the upstream binaries versions use the
+#    same URL which will eventually break the package installation when they
+#    are updated.
+choco install -y --ignore-checksums procexp
+choco install -y --ignore-checksums procmon
 
 # add start menu entries.
 Install-ChocolateyShortcut `
