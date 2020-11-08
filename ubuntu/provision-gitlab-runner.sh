@@ -1,9 +1,10 @@
 #!/bin/bash
-set -eux
+set -euxo pipefail
 
 gitlab_runner_version="${1:-13.4.0}"; shift || true
 config_fqdn=$(hostname --fqdn)
 config_gitlab_fqdn=$(hostname --domain)
+config_gitlab_ip=$(python3 -c "import socket; print(socket.gethostbyname(\"$config_gitlab_fqdn\"))")
 config_gitlab_runner_registration_token="$(cat /vagrant/tmp/gitlab-runners-registration-token.txt)"
 
 export DEBIAN_FRONTEND=noninteractive
@@ -38,7 +39,8 @@ gitlab-runner \
     --tag-list 'docker,ubuntu,ubuntu-20.04' \
     --description 'Docker / Ubuntu 20.04' \
     --executor 'docker' \
-    --docker-image 'ubuntu:20.04'
+    --docker-image 'ubuntu:20.04' \
+    --docker-extra-hosts "$config_gitlab_fqdn:$config_gitlab_ip"
 
 # make sure there are no shell configuration files (at least .bash_logout).
 # NB these were copied from the /etc/skel directory when the gitlab-runner

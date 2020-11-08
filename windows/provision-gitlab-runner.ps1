@@ -9,6 +9,8 @@ param(
     [string]$gitlabRunnerVersion = '13.4.0'
 )
 
+$config_gitlab_ip = "$((Resolve-DNSName $config_gitlab_fqdn).IPAddress)"
+
 # install carbon.
 choco install -y carbon
 Import-Module Carbon
@@ -228,6 +230,11 @@ Install-GitLabRunner 'ps' @(
 )
 
 # see https://docs.gitlab.com/runner/executors/docker.html
+# NB although we use --docker-extra-hosts it will not really work on windows
+#    as it does on linux. you will have to work around it; e.g. like we do in
+#    this vagrant environment by having a recursive dns server in the gitlab
+#    vm and configure this vm to use that dns server.
+#    see https://github.com/moby/moby/issues/41165
 Install-GitLabRunner 'docker' @(
     '--tag-list'
         'docker,windows,windows1809'
@@ -237,6 +244,8 @@ Install-GitLabRunner 'docker' @(
         'docker-windows'
     '--docker-image'
         'mcr.microsoft.com/windows/servercore:1809'
+    '--docker-extra-hosts'
+        "$config_gitlab_fqdn`:$config_gitlab_ip"
 )
 Add-LocalGroupMember -Group docker-users -Member gitlab-runner-docker
 
