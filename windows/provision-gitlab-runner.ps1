@@ -228,6 +228,7 @@ Install-GitLabRunner 'ps' @(
     '--description'
         'PowerShell / Visual Studio 2019 / Windows 1809'
 )
+Add-LocalGroupMember -Group docker-users -Member gitlab-runner-ps
 
 # see https://docs.gitlab.com/runner/executors/docker.html
 # NB although we use --docker-extra-hosts it will not really work on windows
