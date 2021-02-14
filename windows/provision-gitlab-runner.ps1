@@ -96,7 +96,13 @@ function Install-GitLabRunner($name, $extraRunnerArguments) {
     # NB the home directory will have the correct permissions, only the
     #    SYSTEM, Administrators and the gitlab-runner account are granted full
     #    permissions to it.
-    Start-Process -WindowStyle Hidden -Credential $gitLabRunnerAccountCredential -WorkingDirectory 'C:\' -FilePath cmd -ArgumentList '/c'
+    Start-Process `
+        -Wait `
+        -WindowStyle Hidden `
+        -Credential $gitLabRunnerAccountCredential `
+        -WorkingDirectory 'C:\' `
+        -FilePath cmd `
+        -ArgumentList '/c'
 
     # configure the gitlab-runner home.
     choco install -y pstools
