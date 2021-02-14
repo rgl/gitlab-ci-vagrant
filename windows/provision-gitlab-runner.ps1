@@ -105,16 +105,47 @@ function Install-GitLabRunner($name, $extraRunnerArguments) {
         -ArgumentList '/c'
 
     # configure the gitlab-runner home.
-    choco install -y pstools
-    Copy-Item C:\vagrant\windows\configure-gitlab-runner-home.ps1 C:\tmp
-    psexec `
-        -accepteula `
-        -nobanner `
-        -u $gitLabRunnerAccountName `
-        -p $gitLabRunnerAccountPassword `
-        -h `
-        PowerShell -File C:\tmp\configure-gitlab-runner-home.ps1
-    Remove-Item C:\tmp\configure-gitlab-runner-home.ps1
+    # NB we have to manually create the service to run as gitlab-runner because psexec 2.32 is fubar.
+    choco install -y nssm
+    $configureGitLabRunnerServiceName = 'configure-gitlab-runner-home'
+    $configureGitLabRunnerServiceHome = "C:\tmp\$configureGitLabRunnerServiceName"
+    $configureGitLabRunnerServiceLogPath = "$configureGitLabRunnerServiceHome\service.log"
+    mkdir $configureGitLabRunnerServiceHome | Out-Null
+    $acl = Get-Acl $configureGitLabRunnerServiceHome
+    $acl.AddAccessRule((
+        New-Object `
+            Security.AccessControl.FileSystemAccessRule(
+                $gitLabRunnerAccountName,
+                'FullControl',
+                'ContainerInherit,ObjectInherit',
+                'None',
+                'Allow')))
+    Set-Acl $configureGitLabRunnerServiceHome $acl
+    Copy-Item C:\vagrant\windows\configure-gitlab-runner-home.ps1 $configureGitLabRunnerServiceHome
+    nssm install $configureGitLabRunnerServiceName PowerShell.exe
+    nssm set $configureGitLabRunnerServiceName AppParameters `
+        '-NoLogo' `
+        '-NoProfile' `
+        '-ExecutionPolicy Bypass' `
+        '-File configure-gitlab-runner-home.ps1'
+    nssm set $configureGitLabRunnerServiceName ObjectName ".\$gitLabRunnerAccountName" $gitLabRunnerAccountPassword
+    nssm set $configureGitLabRunnerServiceName AppStdout $configureGitLabRunnerServiceLogPath
+    nssm set $configureGitLabRunnerServiceName AppStderr $configureGitLabRunnerServiceLogPath
+    nssm set $configureGitLabRunnerServiceName AppDirectory $configureGitLabRunnerServiceHome
+    nssm set $configureGitLabRunnerServiceName AppExit Default Exit
+    Start-Service $configureGitLabRunnerServiceName
+    $line = 0
+    do {
+        Start-Sleep -Seconds 5
+        if (Test-Path $configureGitLabRunnerServiceLogPath) {
+            Get-Content $configureGitLabRunnerServiceLogPath | Select-Object -Skip $line | ForEach-Object {
+                ++$line
+                Write-Output $_
+            }
+        }
+    } while ((Get-Service $configureGitLabRunnerServiceName).Status -ne 'Stopped')
+    nssm remove $configureGitLabRunnerServiceName confirm
+    Remove-Item -Recurse $configureGitLabRunnerServiceHome
 
     # create the installation directory hierarchy.
     $gitLabRunnerDirectory = mkdir "C:\GitLab-Runner-$name"
