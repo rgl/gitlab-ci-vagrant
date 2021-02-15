@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euxo pipefail
 
-gitlab_runner_version="${1:-13.6.0}"; shift || true
+gitlab_runner_version="${1:-13.8.0}"; shift || true
 config_fqdn=$(hostname --fqdn)
 config_gitlab_fqdn=$(hostname --domain)
 config_gitlab_ip=$(python3 -c "import socket; print(socket.gethostbyname(\"$config_gitlab_fqdn\"))")
