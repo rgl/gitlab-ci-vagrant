@@ -43,12 +43,7 @@ git config --global mergetool.meld.cmd '\"C:/Program Files (x86)/Meld/Meld.exe\"
 # install testing tools.
 choco install -y xunit
 choco install -y reportgenerator.portable
-# NB we need to install a recent (non-released) version due
-#    to https://github.com/OpenCover/opencover/issues/736
-Push-Location opencover-rgl.portable
-choco pack
-choco install -y opencover-rgl.portable -Source $PWD
-Pop-Location
+choco install -y opencover.portable
 
 # install troubeshooting tools.
 # NB we ignore the checksums because all the upstream binaries versions use the
