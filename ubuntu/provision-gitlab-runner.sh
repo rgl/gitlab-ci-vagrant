@@ -1,8 +1,7 @@
 #!/bin/bash
 set -euxo pipefail
 
-gitlab_runner_version="${1:-13.9.0}"; shift || true
-config_fqdn=$(hostname --fqdn)
+gitlab_runner_version="${1:-13.10.0}"; shift || true
 config_gitlab_fqdn=$(hostname --domain)
 config_gitlab_ip=$(python3 -c "import socket; print(socket.gethostbyname(\"$config_gitlab_fqdn\"))")
 config_gitlab_runner_registration_token="$(cat /vagrant/tmp/gitlab-runners-registration-token.txt)"
@@ -13,7 +12,7 @@ export DEBIAN_FRONTEND=noninteractive
 #
 # trust the gitlab certificate.
 
-cp /vagrant/tmp/$config_gitlab_fqdn-crt.pem /usr/local/share/ca-certificates/$config_gitlab_fqdn.crt
+cp "/vagrant/tmp/$config_gitlab_fqdn-crt.pem" "/usr/local/share/ca-certificates/$config_gitlab_fqdn.crt"
 update-ca-certificates
 
 
