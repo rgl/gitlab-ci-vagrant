@@ -277,7 +277,7 @@ Install-GitLabRunner 'docker' @(
     '--executor'
         'docker-windows'
     '--docker-image'
-        'mcr.microsoft.com/windows/servercore:1809'
+        ((Get-WindowsContainers).servercore)
     '--docker-extra-hosts'
         "$config_gitlab_fqdn`:$config_gitlab_ip"
 )

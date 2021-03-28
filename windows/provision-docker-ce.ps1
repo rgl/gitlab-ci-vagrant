@@ -62,13 +62,9 @@ Start-Service docker
 # see https://hub.docker.com/_/microsoft-windows-servercore
 # see https://hub.docker.com/_/microsoft-windowsfamily-windows
 # see https://docs.microsoft.com/en-us/windows/release-information/
-$windowsVersionTag = Get-WindowsVersionTag
-Write-Host "Pulling base image ($windowsVersionTag)..."
-docker pull mcr.microsoft.com/windows/nanoserver:$windowsVersionTag
-#docker pull mcr.microsoft.com/windows/servercore:$windowsVersionTag
-#docker pull mcr.microsoft.com/windows:$windowsVersionTag
-#docker pull microsoft/dotnet:3.1-sdk-nanoserver-$windowsVersionTag
-#docker pull microsoft/dotnet:3.1-aspnetcore-runtime-nanoserver-$windowsVersionTag
+$windowsContainers = Get-WindowsContainers
+Write-Host "Pulling base image $($windowsContainers.nanoserver)..."
+docker pull $windowsContainers.nanoserver
 
 Write-Host 'Creating the firewall rule to allow inbound TCP/IP access to the Docker Engine port 2375...'
 New-NetFirewallRule `
