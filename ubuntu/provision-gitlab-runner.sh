@@ -34,7 +34,6 @@ gitlab-runner \
     --url "https://$config_gitlab_fqdn" \
     --registration-token "$config_gitlab_runner_registration_token" \
     --locked=false \
-    --env 'GIT_SSL_NO_VERIFY=true' \
     --tag-list 'docker,ubuntu,ubuntu-20.04' \
     --description 'Docker / Ubuntu 20.04' \
     --executor 'docker' \
