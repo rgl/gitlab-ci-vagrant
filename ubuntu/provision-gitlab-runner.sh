@@ -26,6 +26,18 @@ wget -qO- https://packages.gitlab.com/install/repositories/runner/gitlab-runner/
 # NB the gitlab-runner daemon manages this node registered runners.
 apt-get install -y "gitlab-runner=$gitlab_runner_version"
 
+# configure the shell runner.
+# see https://docs.gitlab.com/runner/executors/shell.html
+gitlab-runner \
+    register \
+    --non-interactive \
+    --url "https://$config_gitlab_fqdn" \
+    --registration-token "$config_gitlab_runner_registration_token" \
+    --locked=false \
+    --tag-list 'shell,ubuntu,ubuntu-20.04' \
+    --description 'Shell / Ubuntu 20.04' \
+    --executor 'shell'
+
 # configure the docker runner.
 # see https://docs.gitlab.com/runner/executors/docker.html
 gitlab-runner \
