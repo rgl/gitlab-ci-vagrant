@@ -1,5 +1,5 @@
 # see https://dotnet.microsoft.com/download/dotnet-core/3.1
-# see https://github.com/dotnet/core/blob/main/release-notes/3.1/3.1.13/3.1.407-download.md
+# see https://github.com/dotnet/core/blob/main/release-notes/3.1/3.1.14/3.1.408-download.md
 
 # opt-out from dotnet telemetry.
 [Environment]::SetEnvironmentVariable('DOTNET_CLI_TELEMETRY_OPTOUT', '1', 'Machine')
@@ -7,8 +7,8 @@ $env:DOTNET_CLI_TELEMETRY_OPTOUT = '1'
 
 # install the dotnet sdk.
 # NB keep this in sync with provision-iis-dotnetcore-hosting.ps1
-$archiveUrl = 'https://download.visualstudio.microsoft.com/download/pr/a45c8c1c-6466-4afc-a266-bd540069a4a6/97293f1080615bba5572ad1ef3be254c/dotnet-sdk-3.1.407-win-x64.exe'
-$archiveHash = 'd80d05c292361ac464d2d231c649e18db7f30abddd9257087b47908ceb123cd9f702e65ca875ecdc359333f9ed2bdd5275a2f3431786b00c47afaef4579e1355'
+$archiveUrl = 'https://download.visualstudio.microsoft.com/download/pr/fa20039c-5871-4597-8a7b-f0553a12edcc/4fb1cce6214049fe639dd230a9265133/dotnet-sdk-3.1.408-win-x64.exe'
+$archiveHash = 'c8d3000f07735ee7cdf3bab402323bf96413d7afd7dadc5f1e92f02c184b67ca00f188e083f1d6bd8ae21b88a24f87d443088ecee28c33cd186f8ca9606fc816'
 $archiveName = Split-Path -Leaf $archiveUrl
 $archivePath = "$env:TEMP\$archiveName"
 Write-Host "Downloading $archiveName..."
