@@ -1,6 +1,8 @@
 #!/bin/bash
 set -eux
 
+docker_version='20.10.6'
+
 # prevent apt-get et al from asking questions.
 # NB even with this, you'll still get some warnings that you can ignore:
 #     dpkg-preconfigure: unable to re-open stdin: No such file or directory
@@ -15,7 +17,9 @@ apt-get install -y apt-transport-https software-properties-common
 wget -qO- https://download.docker.com/linux/ubuntu/gpg | apt-key add -
 add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 apt-get update
-apt-get install -y docker-ce
+apt-cache madison docker-ce
+docker_version="$(apt-cache madison docker-ce | awk "/$docker_version~/{print \$3}")"
+apt-get install -y "docker-ce=$docker_version" "docker-ce-cli=$docker_version" containerd.io
 
 # configure it.
 systemctl stop docker
