@@ -3,7 +3,7 @@ set -euxo pipefail
 
 # download.
 # see https://docs.docker.com/compose/install/#install-compose-on-linux-systems
-docker_compose_version='1.28.5'
+docker_compose_version='1.29.1'
 docker_compose_url="https://github.com/docker/compose/releases/download/$docker_compose_version/docker-compose-$(uname -s)-$(uname -m)"
 wget -qO /tmp/docker-compose "$docker_compose_url"
 
