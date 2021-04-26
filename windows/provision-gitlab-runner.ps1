@@ -6,7 +6,7 @@ param(
     [string]$config_fqdn = 'windows.gitlab.example.com',
 
     [Parameter(Mandatory=$true)]
-    [string]$gitlabRunnerVersion = '13.10.0'
+    [string]$gitlabRunnerVersion = '13.11.0'
 )
 
 $config_gitlab_ip = "$((Resolve-DNSName $config_gitlab_fqdn).IPAddress)"
