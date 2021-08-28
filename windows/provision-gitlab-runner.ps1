@@ -250,6 +250,9 @@ function Install-GitLabRunner($name, $extraRunnerArguments) {
     Start-Service $gitLabRunnerAccountName
 }
 
+# get windows containers metadata.
+$windowsContainers = Get-WindowsContainers
+
 # see https://docs.gitlab.com/runner/executors/shell.html
 Install-GitLabRunner 'ps' @(
     '--executor'
@@ -257,9 +260,9 @@ Install-GitLabRunner 'ps' @(
     '--shell'
         'powershell'
     '--tag-list'
-        'powershell,vs2019,windows,windows1809'
+        "powershell,vs2019,windows,$($windowsContainers.tag)"
     '--description'
-        'PowerShell / Visual Studio 2019 / Windows 1809'
+        "PowerShell / Visual Studio 2019 / Windows $($windowsContainers.tag)"
 )
 Add-LocalGroupMember -Group docker-users -Member gitlab-runner-ps
 
@@ -271,13 +274,13 @@ Add-LocalGroupMember -Group docker-users -Member gitlab-runner-ps
 #    see https://github.com/moby/moby/issues/41165
 Install-GitLabRunner 'docker' @(
     '--tag-list'
-        'docker,windows,windows1809'
+        "docker,windows,$($windowsContainers.tag)"
     '--description'
-        'Docker / Windows 1809'
+        "Docker / Windows $($windowsContainers.tag)"
     '--executor'
         'docker-windows'
     '--docker-image'
-        ((Get-WindowsContainers).servercore)
+        $windowsContainers.servercore
     '--docker-extra-hosts'
         "$config_gitlab_fqdn`:$config_gitlab_ip"
 )
