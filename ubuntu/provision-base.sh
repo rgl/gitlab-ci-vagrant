@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eux
+set -euxo pipefail
 
 config_fqdn=$(hostname --fqdn)
 config_jenkins_master_fqdn=$(hostname --domain)
