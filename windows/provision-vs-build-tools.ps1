@@ -1,15 +1,15 @@
 # add support for building applications that target the .net 4.8 framework.
 choco install -y netfx-4.8-devpack
 
-# install the Visual Studio Build Tools 2019 16.11.2.
+# install the Visual Studio Build Tools 2019 16.11.5.
 # see https://www.visualstudio.com/downloads/
 # see https://docs.microsoft.com/en-us/visualstudio/releases/2019/release-notes
 # see https://docs.microsoft.com/en-us/visualstudio/install/use-command-line-parameters-to-install-visual-studio?view=vs-2019
 # see https://docs.microsoft.com/en-us/visualstudio/install/command-line-parameter-examples?view=vs-2019
 # see https://docs.microsoft.com/en-us/visualstudio/install/workload-and-component-ids?view=vs-2019
 # see https://docs.microsoft.com/en-us/visualstudio/install/workload-component-id-vs-build-tools?view=vs-2019
-$archiveUrl = 'https://download.visualstudio.microsoft.com/download/pr/bacf7555-1a20-4bf4-ae4d-1003bbc25da8/f3a7e2868c203490a4095231e20e628bf661b7469f2d53626f3fbbdfc161d471/vs_BuildTools.exe'
-$archiveHash = 'f3a7e2868c203490a4095231e20e628bf661b7469f2d53626f3fbbdfc161d471'
+$archiveUrl = 'https://download.visualstudio.microsoft.com/download/pr/5a50b8ac-2c22-47f1-ba60-70d4257a78fa/a4dd4b97c2b8f1280a8ce66bf9e7522e93896ba617212e5ca16be5cdf7b17f1c/vs_BuildTools.exe'
+$archiveHash = 'a4dd4b97c2b8f1280a8ce66bf9e7522e93896ba617212e5ca16be5cdf7b17f1c'
 $archiveName = Split-Path $archiveUrl -Leaf
 $archivePath = "$env:TEMP\$archiveName"
 Write-Host 'Downloading the Visual Studio Build Tools Setup Bootstrapper...'
