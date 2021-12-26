@@ -279,6 +279,8 @@ Install-GitLabRunner 'docker' @(
         "Docker / Windows $($windowsContainers.tag)"
     '--executor'
         'docker-windows'
+    '--shell'
+        'powershell'
     '--docker-image'
         $windowsContainers.servercore
     '--docker-extra-hosts'
