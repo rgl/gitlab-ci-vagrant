@@ -105,7 +105,7 @@ Vagrant.configure('2') do |config|
     config.vm.provision :shell, path: 'windows/ps.ps1', args: 'provision-docker-compose.ps1'
     config.vm.provision :shell, path: 'windows/ps.ps1', args: 'provision-base.ps1'
     config.vm.provision :shell, path: 'windows/ps.ps1', args: 'provision-vs-build-tools.ps1'
-    config.vm.provision :shell, path: 'windows/ps.ps1', args: 'provision-dotnetcore-sdk.ps1'
+    config.vm.provision :shell, path: 'windows/ps.ps1', args: 'provision-dotnet-sdk.ps1'
     config.vm.provision :shell, path: 'windows/ps.ps1', args: ['provision-gitlab-runner.ps1', config_gitlab_fqdn, config_windows_fqdn, gitlab_runner_version], reboot: true
     config.vm.provision :shell, path: 'windows/ps.ps1', args: 'summary.ps1'
   end
