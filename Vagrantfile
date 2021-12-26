@@ -72,7 +72,7 @@ Vagrant.configure('2') do |config|
   config.vm.define :ubuntu do |config|
     config.vm.box = 'ubuntu-20.04-amd64'
     config.vm.hostname = config_ubuntu_fqdn
-    config.vm.network :private_network, ip: config_ubuntu_ip, libvirt__forward_mode: 'route', libvirt__dhcp_enabled: false, hyperv__bridge: 'gitlab'
+    config.vm.network :private_network, ip: config_ubuntu_ip, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false, hyperv__bridge: 'gitlab'
     config.vm.provision :shell, path: 'configure-hyperv-guest.sh', args: [config_ubuntu_ip]
     config.vm.provision :shell, inline: "echo '#{config_gitlab_ip} #{config_gitlab_fqdn}' >>/etc/hosts"
     config.vm.provision :shell, path: 'ubuntu/provision-base.sh'
@@ -94,7 +94,7 @@ Vagrant.configure('2') do |config|
     end
     config.vm.box = 'windows-2019-amd64'
     config.vm.hostname = 'windows'
-    config.vm.network :private_network, ip: config_windows_ip, libvirt__forward_mode: 'route', libvirt__dhcp_enabled: false, hyperv__bridge: 'gitlab'
+    config.vm.network :private_network, ip: config_windows_ip, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false, hyperv__bridge: 'gitlab'
     config.vm.provision :shell, path: 'configure-hyperv-guest.ps1', args: [config_windows_ip]
     config.vm.provision :shell, path: 'windows/ps.ps1', args: ['provision-dns-client.ps1', config_gitlab_ip]
     config.vm.provision :shell, inline: "$env:chocolateyVersion='0.11.3'; iwr https://chocolatey.org/install.ps1 -UseBasicParsing | iex", name: "Install Chocolatey"
