@@ -78,6 +78,7 @@ Vagrant.configure('2') do |config|
     config.vm.provision :shell, path: 'ubuntu/provision-base.sh'
     config.vm.provision :shell, path: 'ubuntu/provision-docker.sh'
     config.vm.provision :shell, path: 'ubuntu/provision-docker-compose.sh'
+    config.vm.provision :shell, path: 'ubuntu/provision-powershell.sh'
     config.vm.provision :shell, path: 'ubuntu/provision-gitlab-runner.sh', args: [gitlab_runner_version]
   end
 
