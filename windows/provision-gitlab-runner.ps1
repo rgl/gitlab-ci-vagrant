@@ -260,7 +260,7 @@ Install-GitLabRunner 'ps' @(
     '--shell'
         'powershell'
     '--tag-list'
-        "powershell,vs2022,windows,$($windowsContainers.tag)"
+        "powershell,shell,vs2022,windows,$($windowsContainers.tag)"
     '--description'
         "PowerShell / Visual Studio 2022 / Windows $($windowsContainers.tag)"
 )
