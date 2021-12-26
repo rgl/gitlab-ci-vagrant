@@ -260,9 +260,9 @@ Install-GitLabRunner 'ps' @(
     '--shell'
         'powershell'
     '--tag-list'
-        "powershell,vs2019,windows,$($windowsContainers.tag)"
+        "powershell,vs2022,windows,$($windowsContainers.tag)"
     '--description'
-        "PowerShell / Visual Studio 2019 / Windows $($windowsContainers.tag)"
+        "PowerShell / Visual Studio 2022 / Windows $($windowsContainers.tag)"
 )
 Add-LocalGroupMember -Group docker-users -Member gitlab-runner-ps
 
