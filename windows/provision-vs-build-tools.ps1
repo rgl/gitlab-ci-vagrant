@@ -1,15 +1,15 @@
 # add support for building applications that target the .net 4.8 framework.
 choco install -y netfx-4.8-devpack
 
-# install the Visual Studio Build Tools 2022 17.0.4.
-# see https://www.visualstudio.com/downloads/
+# install the Visual Studio Build Tools 2022 17.0.5.
+# see https://docs.microsoft.com/en-us/visualstudio/releases/2022/release-history#fixed-version-bootstrappers
 # see https://docs.microsoft.com/en-us/visualstudio/releases/2022/release-notes
 # see https://docs.microsoft.com/en-us/visualstudio/install/use-command-line-parameters-to-install-visual-studio?view=vs-2022
 # see https://docs.microsoft.com/en-us/visualstudio/install/command-line-parameter-examples?view=vs-2022
 # see https://docs.microsoft.com/en-us/visualstudio/install/workload-and-component-ids?view=vs-2022
 # see https://docs.microsoft.com/en-us/visualstudio/install/workload-component-id-vs-build-tools?view=vs-2022
-$archiveUrl = 'https://download.visualstudio.microsoft.com/download/pr/99fe5fea-e07c-4e6e-87ef-32a88c6ec393/ee995ccfedd73d1512ea4eff357dd77bd87f07f5059d15015e02098c444c3d5c/vs_BuildTools.exe'
-$archiveHash = 'ee995ccfedd73d1512ea4eff357dd77bd87f07f5059d15015e02098c444c3d5c'
+$archiveUrl = 'https://download.visualstudio.microsoft.com/download/pr/ce8663b0-08ed-410a-9f5d-4f9469d1b2cb/0279f6067c003f8b81621502fa95a1df377b1fdd7769a8e80ff63df26756d4e2/vs_BuildTools.exe'
+$archiveHash = '0279f6067c003f8b81621502fa95a1df377b1fdd7769a8e80ff63df26756d4e2'
 $archiveName = Split-Path $archiveUrl -Leaf
 $archivePath = "$env:TEMP\$archiveName"
 Write-Host 'Downloading the Visual Studio Build Tools Setup Bootstrapper...'
