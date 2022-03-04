@@ -25,4 +25,4 @@ dotnet tool install --global dotnet-xunit-to-junit --version 3.0.2
 # install the report generator.
 # see https://github.com/danielpalme/ReportGenerator
 # see https://www.nuget.org/packages/dotnet-reportgenerator-globaltool
-dotnet tool install --global dotnet-reportgenerator-globaltool --version 5.0.0
+dotnet tool install --global dotnet-reportgenerator-globaltool --version 5.0.4
