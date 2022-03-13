@@ -1,14 +1,11 @@
 #!/bin/bash
 set -euxo pipefail
 
-# download.
+# install.
 # see https://docs.docker.com/compose/install/#install-compose-on-linux-systems
 # see https://github.com/docker/compose/releases
-docker_compose_version='1.29.2'
-docker_compose_url="https://github.com/docker/compose/releases/download/$docker_compose_version/docker-compose-$(uname -s)-$(uname -m)"
-wget -qO /tmp/docker-compose "$docker_compose_url"
-
-# install.
-install -o root -g root -m 555 /tmp/docker-compose /usr/local/bin
-rm /tmp/docker-compose
-docker-compose --version
+# NB the apt respository was already configured in provision-docker.sh.
+docker_compose_version='2.3.3'
+docker_compose_package_version="$(apt-cache madison docker-compose-plugin | awk "/$docker_compose_version~/{print \$3}")"
+apt-get install -y "docker-compose-plugin=$docker_compose_package_version"
+docker compose version
