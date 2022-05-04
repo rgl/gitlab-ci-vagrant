@@ -20,7 +20,7 @@ dotnet tool install --global SourceLink --version 3.1.1
 # install the xUnit to JUnit report converter.
 # see https://github.com/gabrielweyer/xunit-to-junit
 # see https://www.nuget.org/packages/dotnet-xunit-to-junit
-dotnet tool install --global dotnet-xunit-to-junit --version 3.1.0
+dotnet tool install --global dotnet-xunit-to-junit --version 4.0.0
 
 # install the report generator.
 # see https://github.com/danielpalme/ReportGenerator
