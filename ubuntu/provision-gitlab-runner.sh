@@ -29,14 +29,16 @@ apt-get install -y "gitlab-runner=$gitlab_runner_version"
 
 # configure the shell runner.
 # see https://docs.gitlab.com/runner/executors/shell.html
+os_name="$(lsb_release -si)"
+os_version="$(lsb_release -sr)"
 gitlab-runner \
     register \
     --non-interactive \
     --url "https://$config_gitlab_fqdn" \
     --registration-token "$config_gitlab_runner_registration_token" \
     --locked=false \
-    --tag-list 'shell,linux,ubuntu,ubuntu-20.04' \
-    --description 'Shell / Ubuntu 20.04' \
+    --tag-list "shell,linux,${os_name,,},${os_name,,}-${os_version}" \
+    --description "Shell / ${os_name} ${os_version}" \
     --executor 'shell'
 
 # configure the docker runner.
@@ -47,10 +49,10 @@ gitlab-runner \
     --url "https://$config_gitlab_fqdn" \
     --registration-token "$config_gitlab_runner_registration_token" \
     --locked=false \
-    --tag-list 'docker,linux,ubuntu,ubuntu-20.04' \
-    --description 'Docker / Ubuntu 20.04' \
+    --tag-list "docker,linux,${os_name,,},${os_name,,}-${os_version}" \
+    --description "Docker / ${os_name} ${os_version}" \
     --executor 'docker' \
-    --docker-image 'ubuntu:20.04' \
+    --docker-image "${os_name,,}:${os_version}" \
     --docker-extra-hosts "$config_gitlab_fqdn:$config_gitlab_ip"
 
 # make sure there are no shell configuration files (at least .bash_logout).

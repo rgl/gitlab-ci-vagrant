@@ -253,6 +253,17 @@ function Install-GitLabRunner($name, $extraRunnerArguments) {
 # get windows containers metadata.
 $windowsContainers = Get-WindowsContainers
 
+# get build tools metadata.
+$buildTools = &"C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" `
+    -products Microsoft.VisualStudio.Product.BuildTools `
+    -format json `
+    | ConvertFrom-Json `
+    | ForEach-Object {
+        $_.catalog.productLineVersion
+    }
+$runnerBuildToolsTag = ($buildTools | ForEach-Object { "vs$_" }) -join ','
+$runnerBuildToolsDescription = "Visual Studio $($buildTools -join '/')"
+
 # see https://docs.gitlab.com/runner/executors/shell.html
 Install-GitLabRunner 'ps' @(
     '--executor'
@@ -260,9 +271,9 @@ Install-GitLabRunner 'ps' @(
     '--shell'
         'powershell'
     '--tag-list'
-        "powershell,shell,vs2022,windows,$($windowsContainers.tag)"
+        "powershell,shell,$runnerBuildToolsTag,windows,$($windowsContainers.tag)"
     '--description'
-        "PowerShell / Visual Studio 2022 / Windows $($windowsContainers.tag)"
+        "PowerShell / $runnerBuildToolsDescription / Windows $($windowsContainers.tag)"
 )
 Add-LocalGroupMember -Group docker-users -Member gitlab-runner-ps
 
