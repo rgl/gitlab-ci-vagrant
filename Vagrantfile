@@ -99,7 +99,7 @@ Vagrant.configure('2') do |config|
     config.vm.network :private_network, ip: config_windows_ip, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false, hyperv__bridge: 'gitlab'
     config.vm.provision :shell, path: 'configure-hyperv-guest.ps1', args: [config_windows_ip]
     config.vm.provision :shell, path: 'windows/ps.ps1', args: ['provision-dns-client.ps1', config_gitlab_ip]
-    config.vm.provision :shell, inline: "$env:chocolateyVersion='0.12.1'; iwr https://chocolatey.org/install.ps1 -UseBasicParsing | iex", name: "Install Chocolatey"
+    config.vm.provision :shell, path: 'windows/ps.ps1', args: 'provision-chocolatey.ps1'
     config.vm.provision :shell, path: 'windows/ps.ps1', args: 'provision-dotnet.ps1'
     config.vm.provision :shell, path: 'windows/ps.ps1', args: 'provision-containers-feature.ps1', reboot: true
     config.vm.provision :shell, path: 'windows/ps.ps1', args: 'provision-docker-ce.ps1'
