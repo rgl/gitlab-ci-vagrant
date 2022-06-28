@@ -8,6 +8,7 @@ choco install -y netfx-4.8-devpack
 # see https://docs.microsoft.com/en-us/visualstudio/install/command-line-parameter-examples?view=vs-2022
 # see https://docs.microsoft.com/en-us/visualstudio/install/workload-and-component-ids?view=vs-2022
 # see https://docs.microsoft.com/en-us/visualstudio/install/workload-component-id-vs-build-tools?view=vs-2022
+# NB update the windbg version in provision-procdump-as-postmortem-debugger.ps1 to match the installed Windows10SDK.19041.
 $archiveUrl = 'https://download.visualstudio.microsoft.com/download/pr/32bd2bc7-34ab-4d3d-abbf-526f0be7a954/fb48d292c89281cecb7a17bcc5aba8d62aa81eddf5a502692ec64e5eb43b801d/vs_BuildTools.exe'
 $archiveHash = 'fb48d292c89281cecb7a17bcc5aba8d62aa81eddf5a502692ec64e5eb43b801d'
 $archiveName = Split-Path $archiveUrl -Leaf

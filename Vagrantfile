@@ -100,6 +100,7 @@ Vagrant.configure('2') do |config|
     config.vm.provision :shell, path: 'configure-hyperv-guest.ps1', args: [config_windows_ip]
     config.vm.provision :shell, path: 'windows/ps.ps1', args: ['provision-dns-client.ps1', config_gitlab_ip]
     config.vm.provision :shell, path: 'windows/ps.ps1', args: 'provision-chocolatey.ps1'
+    config.vm.provision :shell, path: 'windows/ps.ps1', args: 'provision-procdump-as-postmortem-debugger.ps1'
     config.vm.provision :shell, path: 'windows/ps.ps1', args: 'provision-containers-feature.ps1', reboot: true
     config.vm.provision :shell, path: 'windows/ps.ps1', args: 'provision-docker-ce.ps1'
     # config.vm.provision :shell, path: 'windows/ps.ps1', args: 'provision-docker-ee.ps1'
