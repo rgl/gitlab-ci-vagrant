@@ -3,7 +3,7 @@ ENV['VAGRANT_EXPERIMENTAL'] = 'typed_triggers'
 
 # NB execute apt-cache madison gitlab-runner to known the available versions.
 #    also see https://gitlab.com/gitlab-org/gitlab-runner/-/tags
-gitlab_runner_version = '15.1.0'
+gitlab_runner_version = '15.3.0'
 
 # link to the gitlab-vagrant environment:
 config_gitlab_fqdn  = 'gitlab.example.com'
