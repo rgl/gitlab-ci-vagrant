@@ -1,9 +1,9 @@
 # download install the docker-compose binaries.
 # see https://github.com/docker/compose/releases
-$archiveVersion = '2.10.0'
+$archiveVersion = '2.11.2'
 $archiveUrl = "https://github.com/docker/compose/releases/download/v$archiveVersion/docker-compose-windows-x86_64.exe"
 $archiveName = Split-Path -Leaf $archiveUrl
-$archiveHash = '759e269e9e2b295b1c25abe7b8625cdb750232e4a5ccb8533bf264e539ac4fb4'
+$archiveHash = '32172ee7ddc9791e9d5f7e7f2e1467c59c3bdb8cd2eb625b3e2fda38b76c9ab7'
 $archivePath = "$env:TEMP\$archiveName"
 Write-Host "Installing docker-compose $archiveVersion..."
 (New-Object System.Net.WebClient).DownloadFile($archiveUrl, $archivePath)
