@@ -8,7 +8,7 @@ source /etc/profile.d/opt-out-powershell-telemetry.sh
 
 # install.
 # see https://docs.microsoft.com/en-us/powershell/scripting/install/install-ubuntu?view=powershell-7.2
-powershell_version='7.2.5'
+powershell_version='7.2.6'
 wget -qO packages-microsoft-prod.deb "https://packages.microsoft.com/config/ubuntu/$(lsb_release -s -r)/packages-microsoft-prod.deb"
 dpkg -i packages-microsoft-prod.deb
 rm packages-microsoft-prod.deb
