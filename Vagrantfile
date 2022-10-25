@@ -70,7 +70,7 @@ Vagrant.configure('2') do |config|
   end
 
   config.vm.define :ubuntu do |config|
-    config.vm.box = 'ubuntu-20.04-amd64'
+    config.vm.box = 'ubuntu-22.04-amd64'
     config.vm.hostname = config_ubuntu_fqdn
     config.vm.network :private_network, ip: config_ubuntu_ip, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false, hyperv__bridge: 'gitlab'
     config.vm.provision :shell, path: 'configure-hyperv-guest.sh', args: [config_ubuntu_ip]
