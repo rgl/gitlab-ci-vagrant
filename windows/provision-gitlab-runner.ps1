@@ -69,12 +69,15 @@ Import-Certificate `
 # variables like PATH) after we have installed all this slave node dependencies.
 Restart-Service sshd
 
-function Install-GitLabRunner($name, $extraRunnerArguments) {
-    Write-Title "Installing GitLab Runner $name..."
+function Install-GitLabRunner($runners) {
+    $accountName = 'gitlab-runner' # NB this has a limit of 20 characters.
+    $fullName = 'GitLab Runner'
+
+    Write-Title "Installing $fullName..."
 
     # create the gitlab-runner user account and home directory.
     [Reflection.Assembly]::LoadWithPartialName('System.Web') | Out-Null
-    $gitLabRunnerAccountName = "gitlab-runner-$name" # NB this has a limit of 20 characters.
+    $gitLabRunnerAccountName = $accountName
     $gitLabRunnerAccountPassword = [Web.Security.Membership]::GeneratePassword(32, 8)
     $gitLabRunnerAccountPasswordSecureString = ConvertTo-SecureString $gitLabRunnerAccountPassword -AsPlainText -Force
     $gitLabRunnerAccountCredential = New-Object `
@@ -84,7 +87,7 @@ function Install-GitLabRunner($name, $extraRunnerArguments) {
             $gitLabRunnerAccountPasswordSecureString
     New-LocalUser `
         -Name $gitLabRunnerAccountName `
-        -FullName "GitLab Runner $name" `
+        -FullName $fullName `
         -Password $gitLabRunnerAccountPasswordSecureString `
         -PasswordNeverExpires
     # login to force the system to create the home directory.
@@ -143,7 +146,7 @@ function Install-GitLabRunner($name, $extraRunnerArguments) {
     Remove-Item -Recurse $configureGitLabRunnerServiceHome
 
     # create the installation directory hierarchy.
-    $gitLabRunnerDirectory = mkdir "C:\GitLab-Runner-$name"
+    $gitLabRunnerDirectory = mkdir "C:\$accountName"
     $acl = New-Object Security.AccessControl.DirectorySecurity
     $acl.SetAccessRuleProtection($true, $false)
     @(
@@ -210,16 +213,18 @@ function Install-GitLabRunner($name, $extraRunnerArguments) {
     #    is written to stderr by $gitLabRunnerPath, as that is expected.
     $ErrorActionPreference = 'Continue'
     try {
-        &$gitLabRunnerPath `
-            register `
-            --non-interactive `
-            --config $gitLabRunnerConfigPath `
-            --url "https://$config_gitlab_fqdn" `
-            --registration-token $gitLabRunnerRegistrationToken `
-            --locked=false `
-            @extraRunnerArguments
-        if ($LASTEXITCODE) {
-            throw "failed to register gitlab-runner $name with exit code $LASTEXITCODE"
+        $runners | ForEach-Object {
+            &$gitLabRunnerPath `
+                register `
+                --non-interactive `
+                --config $gitLabRunnerConfigPath `
+                --url "https://$config_gitlab_fqdn" `
+                --registration-token $gitLabRunnerRegistrationToken `
+                --locked=false `
+                @_
+            if ($LASTEXITCODE) {
+                throw "failed to register $gitLabRunnerAccountName with exit code $LASTEXITCODE"
+            }
         }
     } finally {
         $ErrorActionPreference = 'Stop'
@@ -240,11 +245,14 @@ function Install-GitLabRunner($name, $extraRunnerArguments) {
         --config $gitLabRunnerConfigPath `
         --working-directory $gitLabRunnerWorkspaceDirectory
     if ($LASTEXITCODE) {
-        throw "failed to install the gitlab-runner service with exit code $LASTEXITCODE"
+        throw "failed to install the $gitLabRunnerAccountName service with exit code $LASTEXITCODE"
     }
 
     # grant the logon as service permission to the gitlab-runner account.
     Grant-Privilege $gitLabRunnerAccountName 'SeServiceLogonRight'
+
+    # grant docker access to the gitlab-runner account.
+    Add-LocalGroupMember -Group docker-users -Member $gitLabRunnerAccountName
 
     # start the service.
     Start-Service $gitLabRunnerAccountName
@@ -264,40 +272,40 @@ $buildTools = &"C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere
 $runnerBuildToolsTag = ($buildTools | ForEach-Object { "vs$_" }) -join ','
 $runnerBuildToolsDescription = "Visual Studio $($buildTools -join '/')"
 
-# see https://docs.gitlab.com/runner/executors/shell.html
-Install-GitLabRunner 'ps' @(
-    '--executor'
-        'shell'
-    '--shell'
-        'powershell'
-    '--tag-list'
-        "powershell,shell,$runnerBuildToolsTag,windows,$($windowsContainers.tag)"
-    '--description'
-        "PowerShell / $runnerBuildToolsDescription / Windows $($windowsContainers.tag)"
+# install the gitlab-runner service and runners/executors.
+Install-GitLabRunner @(
+    # see https://docs.gitlab.com/runner/executors/shell.html
+    ,@(
+        '--executor'
+            'shell'
+        '--shell'
+            'powershell'
+        '--tag-list'
+            "powershell,shell,$runnerBuildToolsTag,windows,$($windowsContainers.tag)"
+        '--description'
+            "PowerShell / $runnerBuildToolsDescription / Windows $($windowsContainers.tag)"
+    )
+    # see https://docs.gitlab.com/runner/executors/docker.html
+    # NB although we use --docker-extra-hosts it will not really work on windows
+    #    as it does on linux. you will have to work around it; e.g. like we do in
+    #    this vagrant environment by having a recursive dns server in the gitlab
+    #    vm and configure this vm to use that dns server.
+    #    see https://github.com/moby/moby/issues/41165
+    ,@(
+        '--tag-list'
+            "docker,windows,$($windowsContainers.tag)"
+        '--description'
+            "Docker / Windows $($windowsContainers.tag)"
+        '--executor'
+            'docker-windows'
+        '--shell'
+            'powershell'
+        '--docker-image'
+            $windowsContainers.servercore
+        '--docker-extra-hosts'
+            "$config_gitlab_fqdn`:$config_gitlab_ip"
+    )
 )
-Add-LocalGroupMember -Group docker-users -Member gitlab-runner-ps
-
-# see https://docs.gitlab.com/runner/executors/docker.html
-# NB although we use --docker-extra-hosts it will not really work on windows
-#    as it does on linux. you will have to work around it; e.g. like we do in
-#    this vagrant environment by having a recursive dns server in the gitlab
-#    vm and configure this vm to use that dns server.
-#    see https://github.com/moby/moby/issues/41165
-Install-GitLabRunner 'docker' @(
-    '--tag-list'
-        "docker,windows,$($windowsContainers.tag)"
-    '--description'
-        "Docker / Windows $($windowsContainers.tag)"
-    '--executor'
-        'docker-windows'
-    '--shell'
-        'powershell'
-    '--docker-image'
-        $windowsContainers.servercore
-    '--docker-extra-hosts'
-        "$config_gitlab_fqdn`:$config_gitlab_ip"
-)
-Add-LocalGroupMember -Group docker-users -Member gitlab-runner-docker
 
 # create artifacts that need to be shared with the other nodes.
 mkdir -Force C:\vagrant\tmp | Out-Null
