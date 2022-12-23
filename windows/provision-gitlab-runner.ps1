@@ -285,6 +285,17 @@ Install-GitLabRunner @(
         '--description'
             "PowerShell / $runnerBuildToolsDescription / Windows $($windowsContainers.tag)"
     )
+    # see https://docs.gitlab.com/runner/executors/shell.html
+    ,@(
+        '--executor'
+            'shell'
+        '--shell'
+            'pwsh'
+        '--tag-list'
+            "pwsh,shell,$runnerBuildToolsTag,windows,$($windowsContainers.tag)"
+        '--description'
+            "pwsh / $runnerBuildToolsDescription / Windows $($windowsContainers.tag)"
+    )
     # see https://docs.gitlab.com/runner/executors/docker.html
     # NB although we use --docker-extra-hosts it will not really work on windows
     #    as it does on linux. you will have to work around it; e.g. like we do in
