@@ -15,6 +15,13 @@ vagrant up --no-destroy-on-error ubuntu
 vagrant up --no-destroy-on-error windows
 ```
 
+List this repository dependencies (and which have newer versions):
+
+```bash
+export GITHUB_COM_TOKEN='YOUR_GITHUB_PERSONAL_TOKEN'
+./renovate.sh
+```
+
 # Reference
 
 * [.gitlab-ci.yml documentation](https://docs.gitlab.com/ee/ci/yaml/index.html)

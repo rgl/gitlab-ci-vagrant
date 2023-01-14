@@ -4,6 +4,7 @@
 # see https://github.com/rgl/docker-ce-windows-binaries-vagrant/releases/tag/v20.10.22
 
 # download install the docker binaries.
+# renovate: datasource=github-releases depName=rgl/docker-ce-windows-binaries-vagrant
 $archiveVersion = '20.10.22'
 $archiveName = "docker-$archiveVersion.zip"
 $archiveUrl = "https://github.com/rgl/docker-ce-windows-binaries-vagrant/releases/download/v$archiveVersion/$archiveName"

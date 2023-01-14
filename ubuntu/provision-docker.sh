@@ -1,6 +1,8 @@
 #!/bin/bash
 set -eux
 
+# see https://github.com/moby/moby/releases
+# renovate: datasource=github-releases depName=moby/moby
 docker_version='20.10.22'
 
 # prevent apt-get et al from asking questions.
