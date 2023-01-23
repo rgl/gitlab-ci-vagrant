@@ -11,8 +11,7 @@ param(
 
 $config_gitlab_ip = "$((Resolve-DNSName $config_gitlab_fqdn).IPAddress)"
 
-# install carbon.
-choco install -y carbon
+# import carbon.
 Import-Module Carbon
 
 # install git and related applications.

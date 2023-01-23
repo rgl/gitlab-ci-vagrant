@@ -146,6 +146,9 @@ New-Item -Path HKCU:Software\Microsoft\Windows\CurrentVersion\Explorer\CabinetSt
     | New-ItemProperty -Name FullPath -Value 1 -PropertyType DWORD `
     | Out-Null
 
+# install the carbon powershell module.
+choco install -y carbon
+
 # install Google Chrome.
 # see https://www.chromium.org/administrators/configuring-other-preferences
 choco install -y --ignore-checksums googlechrome
