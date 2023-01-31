@@ -22,6 +22,9 @@ Vagrant.configure('2') do |config|
     lv.cpu_mode = 'host-passthrough'
     lv.nested = false
     lv.keymap = 'pt'
+    lv.disk_bus = 'scsi'
+    lv.disk_device = 'sda'
+    lv.disk_driver :discard => 'unmap', :cache => 'unsafe'
     config.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: '4.2', nfs_udp: false
   end
 
@@ -71,17 +74,23 @@ Vagrant.configure('2') do |config|
   end
 
   config.vm.define :ubuntu do |config|
+    config.vm.provider :libvirt do |lv, config|
+      lv.storage :file, :size => '30G', :bus => 'scsi', :discard => 'unmap', :cache => 'unsafe'
+    end
     config.vm.box = 'ubuntu-22.04-amd64'
     config.vm.hostname = config_ubuntu_fqdn
     config.vm.network :private_network, ip: config_ubuntu_ip, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false, hyperv__bridge: 'gitlab'
     config.vm.provision :shell, path: 'configure-hyperv-guest.sh', args: [config_ubuntu_ip]
     config.vm.provision :shell, inline: "echo '#{config_gitlab_ip} #{config_gitlab_fqdn}' >>/etc/hosts"
     config.vm.provision :shell, path: 'ubuntu/provision-base.sh'
+    config.vm.provision :shell, path: 'ubuntu/provision-lxd.sh'
     config.vm.provision :shell, path: 'ubuntu/provision-docker.sh'
     config.vm.provision :shell, path: 'ubuntu/provision-docker-compose.sh'
     config.vm.provision :shell, path: 'ubuntu/provision-powershell.sh'
     config.vm.provision :shell, path: 'ubuntu/provision-dotnet-sdk.sh'
     config.vm.provision :shell, path: 'ubuntu/provision-gitlab-runner.sh', args: [gitlab_runner_version]
+    config.vm.provision :shell, path: 'ubuntu/provision-gitlab-runner-lxd-ubuntu.sh', args: [gitlab_runner_version]
+    config.vm.provision :shell, path: 'ubuntu/provision-gitlab-runner-lxd.sh'
   end
 
   config.vm.define :windows do |config|
