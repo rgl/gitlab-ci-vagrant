@@ -2,6 +2,7 @@
 set -euxo pipefail
 
 gitlab_runner_version="${1:-15.8.1}"; shift || true
+docker_version="${1:-23.0.1}"; shift || true
 os_name="$(lsb_release -si)"
 os_version="$(lsb_release -sr)"
 os_codename="$(lsb_release -sc)"
@@ -19,9 +20,18 @@ fi
 # build the container.
 lxc init $base_image_name $image_name </dev/null
 lxc config set $image_name boot.autostart=false
+# configure the container to run nested docker managed containers.
+# see https://ubuntu.com/tutorials/how-to-run-docker-inside-lxd-containers
+# see https://www.youtube.com/watch?v=_fCSSEyiGro
+lxc config set $image_name \
+    security.nesting=true \
+    security.syscalls.intercept.mknod=true \
+    security.syscalls.intercept.setxattr=true
+# TODO set the container resources (e.g. cpu, memory)?
 lxc start $image_name
 lxc exec $image_name \
     --env "gitlab_runner_version=$gitlab_runner_version" \
+    --env "docker_version=$docker_version" \
     -- bash <<'LXCEXEC'
 set -euxo pipefail
 
@@ -61,6 +71,17 @@ systemctl disable --now gitlab-runner
 #       ERROR: Job failed: exit status 1
 #    see https://gitlab.com/gitlab-org/gitlab-runner/issues/4449
 rm -f /home/gitlab-runner/{.bash_logout,.bashrc,.profile}
+
+# install docker.
+# see https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/#install-using-the-repository
+# see https://github.com/moby/moby/releases
+apt-get install -y apt-transport-https software-properties-common
+wget -qO- https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+apt-get update
+apt-cache madison docker-ce
+docker_version="$(apt-cache madison docker-ce | awk "/$docker_version/{print \$3}")"
+apt-get install -y "docker-ce=$docker_version" "docker-ce-cli=$docker_version" containerd.io
 
 # dump information.
 uname -a
