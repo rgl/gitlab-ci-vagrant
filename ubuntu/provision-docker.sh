@@ -3,7 +3,7 @@ set -eux
 
 # see https://github.com/moby/moby/releases
 # renovate: datasource=github-releases depName=moby/moby
-docker_version='20.10.23'
+docker_version='23.0.1'
 
 # prevent apt-get et al from asking questions.
 # NB even with this, you'll still get some warnings that you can ignore:
@@ -20,11 +20,12 @@ wget -qO- https://download.docker.com/linux/ubuntu/gpg | apt-key add -
 add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 apt-get update
 apt-cache madison docker-ce
-docker_version="$(apt-cache madison docker-ce | awk "/$docker_version~/{print \$3}")"
+docker_version="$(apt-cache madison docker-ce | awk "/$docker_version/{print \$3}")"
 apt-get install -y "docker-ce=$docker_version" "docker-ce-cli=$docker_version" containerd.io
 
 # configure it.
 systemctl stop docker
+install -m 750 -d /etc/docker
 cat >/etc/docker/daemon.json <<'EOF'
 {
     "experimental": false,

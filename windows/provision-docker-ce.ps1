@@ -1,21 +1,16 @@
 # see https://docs.microsoft.com/en-us/virtualization/windowscontainers/manage-docker/configure-docker-daemon
 # see https://docs.docker.com/engine/installation/linux/docker-ce/binaries/#install-server-and-client-binaries-on-windows
-# see https://github.com/moby/moby/releases/tag/v20.10.23
-# see https://github.com/rgl/docker-ce-windows-binaries-vagrant/releases/tag/v20.10.23
+# see https://github.com/moby/moby/releases/tag/v23.0.1
+# see https://github.com/rgl/docker-ce-windows-binaries-vagrant/releases/tag/v23.0.1
 
 # download install the docker binaries.
 # renovate: datasource=github-releases depName=rgl/docker-ce-windows-binaries-vagrant
-$archiveVersion = '20.10.23'
+$archiveVersion = '23.0.1'
 $archiveName = "docker-$archiveVersion.zip"
 $archiveUrl = "https://github.com/rgl/docker-ce-windows-binaries-vagrant/releases/download/v$archiveVersion/$archiveName"
-$archiveHash = '779cee8e89da175e197be6a1e59e151be43e55852e9342b3766213f1fe9d9baf'
 $archivePath = "$env:TEMP\$archiveName"
 Write-Host "Installing docker $archiveVersion..."
 (New-Object System.Net.WebClient).DownloadFile($archiveUrl, $archivePath)
-$archiveActualHash = (Get-FileHash $archivePath -Algorithm SHA256).Hash
-if ($archiveActualHash -ne $archiveHash) {
-    throw "the $archiveUrl file hash $archiveActualHash does not match the expected $archiveHash"
-}
 Expand-Archive $archivePath -DestinationPath $env:ProgramFiles
 Remove-Item $archivePath
 
@@ -97,7 +92,8 @@ Write-Title 'docker named pipe \\.\pipe\docker_engine ACL'
 #       [System.IO.Directory]::SetAccessControl('\\.\pipe\docker_engine', $ac)
 [System.IO.Directory]::GetAccessControl("\\.\pipe\docker_engine") | Format-Table -Wrap
 
-# see https://docs.docker.com/engine/api/v1.41/
+# see https://docs.docker.com/engine/api/version-history/
+# see https://docs.docker.com/engine/api/v1.42/
 # see https://github.com/moby/moby/tree/master/api
 Write-Title 'docker info (obtained from http://localhost:2375/info)'
 $infoResponse = Invoke-WebRequest 'http://localhost:2375/info' -UseBasicParsing
