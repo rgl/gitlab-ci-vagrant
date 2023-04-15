@@ -15,6 +15,8 @@ config_ubuntu_ip    = '10.10.9.98'
 config_windows_fqdn = "windows.#{config_gitlab_fqdn}"
 config_windows_ip   = '10.10.9.97'
 
+config_os_disk_size_gb = 32
+
 Vagrant.configure('2') do |config|
   config.vm.provider :libvirt do |lv, config|
     lv.memory = 2*1024
@@ -25,6 +27,7 @@ Vagrant.configure('2') do |config|
     lv.disk_bus = 'scsi'
     lv.disk_device = 'sda'
     lv.disk_driver :discard => 'unmap', :cache => 'unsafe'
+    lv.machine_virtual_size = config_os_disk_size_gb
     config.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: '4.2', nfs_udp: false
   end
 
@@ -82,6 +85,7 @@ Vagrant.configure('2') do |config|
     config.vm.network :private_network, ip: config_ubuntu_ip, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false, hyperv__bridge: 'gitlab'
     config.vm.provision :shell, path: 'configure-hyperv-guest.sh', args: [config_ubuntu_ip]
     config.vm.provision :shell, inline: "echo '#{config_gitlab_ip} #{config_gitlab_fqdn}' >>/etc/hosts"
+    config.vm.provision :shell, path: 'ubuntu/provision-resize-disk.sh'
     config.vm.provision :shell, path: 'ubuntu/provision-base.sh'
     config.vm.provision :shell, path: 'ubuntu/provision-lxd.sh'
     config.vm.provision :shell, path: 'ubuntu/provision-docker.sh'
