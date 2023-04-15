@@ -4,18 +4,18 @@ ENV['VAGRANT_EXPERIMENTAL'] = 'typed_triggers'
 # NB execute apt-cache madison gitlab-runner to known the available versions.
 #    also see https://gitlab.com/gitlab-org/gitlab-runner/-/tags
 # renovate: datasource=gitlab-tags depName=gitlab-org/gitlab-runner
-gitlab_runner_version = '15.10.1'
+GITLAB_RUNNER_VERSION = '15.10.1'
 
 # link to the gitlab-vagrant environment:
-config_gitlab_fqdn  = 'gitlab.example.com'
-config_gitlab_ip    = '10.10.9.99'
+CONFIG_GITLAB_FQDN  = 'gitlab.example.com'
+CONFIG_GITLAB_IP    = '10.10.9.99'
 # runner nodes:
-config_ubuntu_fqdn  = "ubuntu.#{config_gitlab_fqdn}"
-config_ubuntu_ip    = '10.10.9.98'
-config_windows_fqdn = "windows.#{config_gitlab_fqdn}"
-config_windows_ip   = '10.10.9.97'
+CONFIG_UBUNTU_FQDN  = "ubuntu.#{CONFIG_GITLAB_FQDN}"
+CONFIG_UBUNTU_IP    = '10.10.9.98'
+CONFIG_WINDOWS_FQDN = "windows.#{CONFIG_GITLAB_FQDN}"
+CONFIG_WINDOWS_IP   = '10.10.9.97'
 
-config_os_disk_size_gb = 32
+CONFIG_OS_DISK_SIZE_GB = 32
 
 Vagrant.configure('2') do |config|
   config.vm.provider :libvirt do |lv, config|
@@ -27,7 +27,7 @@ Vagrant.configure('2') do |config|
     lv.disk_bus = 'scsi'
     lv.disk_device = 'sda'
     lv.disk_driver :discard => 'unmap', :cache => 'unsafe'
-    lv.machine_virtual_size = config_os_disk_size_gb
+    lv.machine_virtual_size = CONFIG_OS_DISK_SIZE_GB
     config.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: '4.2', nfs_udp: false
   end
 
@@ -81,10 +81,10 @@ Vagrant.configure('2') do |config|
       lv.storage :file, :size => '30G', :bus => 'scsi', :discard => 'unmap', :cache => 'unsafe'
     end
     config.vm.box = 'ubuntu-22.04-amd64'
-    config.vm.hostname = config_ubuntu_fqdn
-    config.vm.network :private_network, ip: config_ubuntu_ip, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false, hyperv__bridge: 'gitlab'
-    config.vm.provision :shell, path: 'configure-hyperv-guest.sh', args: [config_ubuntu_ip]
-    config.vm.provision :shell, inline: "echo '#{config_gitlab_ip} #{config_gitlab_fqdn}' >>/etc/hosts"
+    config.vm.hostname = CONFIG_UBUNTU_FQDN
+    config.vm.network :private_network, ip: CONFIG_UBUNTU_IP, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false, hyperv__bridge: 'gitlab'
+    config.vm.provision :shell, path: 'configure-hyperv-guest.sh', args: [CONFIG_UBUNTU_IP]
+    config.vm.provision :shell, inline: "echo '#{CONFIG_GITLAB_IP} #{CONFIG_GITLAB_FQDN}' >>/etc/hosts"
     config.vm.provision :shell, path: 'ubuntu/provision-resize-disk.sh'
     config.vm.provision :shell, path: 'ubuntu/provision-base.sh'
     config.vm.provision :shell, path: 'ubuntu/provision-lxd.sh'
@@ -92,8 +92,8 @@ Vagrant.configure('2') do |config|
     config.vm.provision :shell, path: 'ubuntu/provision-docker-compose.sh'
     config.vm.provision :shell, path: 'ubuntu/provision-powershell.sh'
     config.vm.provision :shell, path: 'ubuntu/provision-dotnet-sdk.sh'
-    config.vm.provision :shell, path: 'ubuntu/provision-gitlab-runner.sh', args: [gitlab_runner_version]
-    config.vm.provision :shell, path: 'ubuntu/provision-gitlab-runner-lxd-ubuntu.sh', args: [gitlab_runner_version]
+    config.vm.provision :shell, path: 'ubuntu/provision-gitlab-runner.sh', args: [GITLAB_RUNNER_VERSION]
+    config.vm.provision :shell, path: 'ubuntu/provision-gitlab-runner-lxd-ubuntu.sh', args: [GITLAB_RUNNER_VERSION]
     config.vm.provision :shell, path: 'ubuntu/provision-gitlab-runner-lxd.sh'
   end
 
@@ -110,9 +110,9 @@ Vagrant.configure('2') do |config|
     end
     config.vm.box = 'windows-2022-amd64'
     config.vm.hostname = 'windows'
-    config.vm.network :private_network, ip: config_windows_ip, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false, hyperv__bridge: 'gitlab'
-    config.vm.provision :shell, path: 'configure-hyperv-guest.ps1', args: [config_windows_ip]
-    config.vm.provision :shell, path: 'windows/ps.ps1', args: ['provision-dns-client.ps1', config_gitlab_ip]
+    config.vm.network :private_network, ip: CONFIG_WINDOWS_IP, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false, hyperv__bridge: 'gitlab'
+    config.vm.provision :shell, path: 'configure-hyperv-guest.ps1', args: [CONFIG_WINDOWS_IP]
+    config.vm.provision :shell, path: 'windows/ps.ps1', args: ['provision-dns-client.ps1', CONFIG_GITLAB_IP]
     config.vm.provision :shell, path: 'windows/ps.ps1', args: 'provision-chocolatey.ps1'
     config.vm.provision :shell, path: 'windows/ps.ps1', args: 'provision-base.ps1'
     config.vm.provision :shell, path: 'windows/ps.ps1', args: 'provision-procdump-as-postmortem-debugger.ps1'
@@ -121,7 +121,7 @@ Vagrant.configure('2') do |config|
     config.vm.provision :shell, path: 'windows/ps.ps1', args: 'provision-docker-compose.ps1'
     config.vm.provision :shell, path: 'windows/ps.ps1', args: 'provision-vs-build-tools.ps1'
     config.vm.provision :shell, path: 'windows/ps.ps1', args: 'provision-dotnet-sdk.ps1'
-    config.vm.provision :shell, path: 'windows/ps.ps1', args: ['provision-gitlab-runner.ps1', config_gitlab_fqdn, config_windows_fqdn, gitlab_runner_version], reboot: true
+    config.vm.provision :shell, path: 'windows/ps.ps1', args: ['provision-gitlab-runner.ps1', CONFIG_GITLAB_FQDN, CONFIG_WINDOWS_FQDN, GITLAB_RUNNER_VERSION], reboot: true
     config.vm.provision :shell, path: 'windows/ps.ps1', args: 'summary.ps1'
   end
 
