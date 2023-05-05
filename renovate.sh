@@ -45,9 +45,6 @@ docker run \
 bash -euc 'while [ -z "$(wget -qO- http://localhost:3000/api/v1/version | jq -r ".version | select(.!=null)")" ]; do sleep 5; done'
 
 # create user in gitea.
-# see https://docs.gitea.io/en-us/api-usage/
-# see https://docs.gitea.io/en-us/oauth2-provider/#scopes
-# see https://try.gitea.io/api/swagger#/user/userCreateToken
 echo "Creating Gitea $RENOVATE_USERNAME user..."
 docker exec --user git "$gitea_container_name" gitea admin user create \
     --admin \
@@ -60,12 +57,15 @@ curl \
     -X 'PATCH' \
     -H 'Accept: application/json' \
     -H 'Content-Type: application/json' \
-    -d "{\"full_name\":\"$RENOVATE_NAME\", "scopes": ["repo"]}" \
+    -d "{\"full_name\":\"$RENOVATE_NAME\"}" \
     "http://localhost:3000/api/v1/user/settings" \
     | jq \
     > /dev/null
 
 # create the user personal access token.
+# see https://docs.gitea.io/en-us/api-usage/
+# see https://docs.gitea.io/en-us/oauth2-provider/#scopes
+# see https://try.gitea.io/api/swagger#/user/userCreateToken
 echo "Creating Gitea $RENOVATE_USERNAME user personal access token..."
 install -d tmp
 curl \
@@ -73,7 +73,7 @@ curl \
     -u "$RENOVATE_USERNAME:$RENOVATE_PASSWORD" \
     -X POST \
     -H "Content-Type: application/json" \
-    -d '{"name": "renovate"}' \
+    -d '{"name": "renovate", "scopes": ["repo"]}' \
     "http://localhost:3000/api/v1/users/$RENOVATE_USERNAME/tokens" \
     | jq -r .sha1 \
     >tmp/renovate-gitea-token.txt
