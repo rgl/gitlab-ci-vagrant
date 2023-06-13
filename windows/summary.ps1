@@ -7,4 +7,4 @@ Write-Host (Get-DotNetVersion)
 Write-Title 'Installed MSBuild version'
 MSBuild -version
 Write-Title 'Installed chocolatey packages'
-choco list -l
+choco list
