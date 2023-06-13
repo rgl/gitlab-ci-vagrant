@@ -10,6 +10,7 @@ config_gitlab_runner_registration_token="$(cat /vagrant/tmp/gitlab-runners-regis
 # see https://docs.gitlab.com/runner/executors/custom_examples/lxd.html
 install -d /opt/gitlab-runner-lxd
 install -m 444 /vagrant/ubuntu/gitlab-runner-lxd/base.sh /opt/gitlab-runner-lxd
+install -m 755 /vagrant/ubuntu/gitlab-runner-lxd/config.sh /opt/gitlab-runner-lxd
 install -m 755 /vagrant/ubuntu/gitlab-runner-lxd/prepare.sh /opt/gitlab-runner-lxd
 install -m 755 /vagrant/ubuntu/gitlab-runner-lxd/run.sh /opt/gitlab-runner-lxd
 install -m 755 /vagrant/ubuntu/gitlab-runner-lxd/cleanup.sh /opt/gitlab-runner-lxd
@@ -25,7 +26,11 @@ gitlab-runner \
     --description "LXD / ${os_name} ${os_version}" \
     --builds-dir /builds \
     --cache-dir /cache \
-    --executor 'custom' \
+    --executor custom \
+    --custom-config-exec /opt/gitlab-runner-lxd/config.sh \
+    --custom-config-exec-timeout 120 \
     --custom-prepare-exec /opt/gitlab-runner-lxd/prepare.sh \
+    --custom-prepare-exec-timeout 120 \
     --custom-run-exec /opt/gitlab-runner-lxd/run.sh \
-    --custom-cleanup-exec /opt/gitlab-runner-lxd/cleanup.sh
+    --custom-cleanup-exec /opt/gitlab-runner-lxd/cleanup.sh \
+    --custom-cleanup-exec-timeout 120
