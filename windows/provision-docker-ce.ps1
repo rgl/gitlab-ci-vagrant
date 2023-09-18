@@ -1,4 +1,4 @@
-# see https://docs.microsoft.com/en-us/virtualization/windowscontainers/manage-docker/configure-docker-daemon
+# see https://learn.microsoft.com/en-us/virtualization/windowscontainers/manage-docker/configure-docker-daemon
 # see https://docs.docker.com/engine/installation/linux/docker-ce/binaries/#install-server-and-client-binaries-on-windows
 # see https://github.com/moby/moby/releases/tag/v24.0.5
 # see https://github.com/rgl/docker-ce-windows-binaries-vagrant/releases/tag/v24.0.5

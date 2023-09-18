@@ -2,12 +2,12 @@
 set -euxo pipefail
 
 # opt-out of telemetry.
-# see https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_telemetry?view=powershell-7.2
+# see https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_telemetry?view=powershell-7.2
 echo 'export POWERSHELL_TELEMETRY_OPTOUT=1' >/etc/profile.d/opt-out-powershell-telemetry.sh
 source /etc/profile.d/opt-out-powershell-telemetry.sh
 
 # install.
-# see https://docs.microsoft.com/en-us/powershell/scripting/install/install-ubuntu?view=powershell-7.2
+# see https://learn.microsoft.com/en-us/powershell/scripting/install/install-ubuntu?view=powershell-7.2
 # see https://github.com/PowerShell/PowerShell/releases
 # renovate: datasource=github-releases depName=PowerShell/PowerShell extractVersion=^v(?<version>7\.2\..+)
 powershell_version='7.2.13'

@@ -35,8 +35,8 @@ function Write-Title($title) {
 # see https://mcr.microsoft.com/v2/dotnet/sdk/tags/list
 # see https://mcr.microsoft.com/v2/dotnet/runtime/tags/list
 # see https://hub.docker.com/_/golang/
-# see https://docs.microsoft.com/en-us/windows/release-information/
-# see https://docs.microsoft.com/en-us/windows/release-health/windows-server-release-info
+# see https://learn.microsoft.com/en-us/windows/release-health/
+# see https://learn.microsoft.com/en-us/windows/release-health/windows-server-release-info
 # see Get-WindowsVersion at https://github.com/rgl/windows-vagrant/blob/master/example/summary.ps1
 function Get-WindowsContainers {
     $currentVersionKey = Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion'
@@ -90,7 +90,7 @@ function docker {
 }
 
 function Get-DotNetVersion {
-    # see https://docs.microsoft.com/en-us/dotnet/framework/migration-guide/how-to-determine-which-versions-are-installed#net_d
+    # see https://learn.microsoft.com/en-us/dotnet/framework/migration-guide/how-to-determine-which-versions-are-installed#detect-net-framework-45-and-later-versions
     $release = [int](Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full' -Name Release).Release
     if ($release -ge 528040) {
         return '4.8 or later'
