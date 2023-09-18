@@ -15,14 +15,20 @@ trap {
 # see https://github.com/dotnet/sourcelink
 # see https://github.com/ctaggart/SourceLink
 # see https://www.nuget.org/packages/SourceLink
-dotnet tool install --global SourceLink --version 3.1.1
+# renovate: datasource=nuget depName=SourceLink
+$sourceLinkVersion = '3.1.1'
+dotnet tool install --global SourceLink --version $sourceLinkVersion
 
 # install the xUnit to JUnit report converter.
 # see https://github.com/gabrielweyer/xunit-to-junit
 # see https://www.nuget.org/packages/dotnet-xunit-to-junit
-dotnet tool install --global dotnet-xunit-to-junit --version 4.0.0
+# renovate: datasource=nuget depName=dotnet-xunit-to-junit
+$dotnetXunitToJunitVersion = '4.0.0'
+dotnet tool install --global dotnet-xunit-to-junit --version $dotnetXunitToJunitVersion
 
 # install the report generator.
 # see https://github.com/danielpalme/ReportGenerator
 # see https://www.nuget.org/packages/dotnet-reportgenerator-globaltool
-dotnet tool install --global dotnet-reportgenerator-globaltool --version 5.1.12
+# renovate: datasource=nuget depName=dotnet-reportgenerator-globaltool
+$dotnetReportgeneratorGlobaltoolVersion = '5.1.12'
+dotnet tool install --global dotnet-reportgenerator-globaltool --version $dotnetReportgeneratorGlobaltoolVersion
