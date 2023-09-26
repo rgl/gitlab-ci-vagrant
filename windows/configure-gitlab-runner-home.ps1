@@ -23,7 +23,7 @@ dotnet tool install --global SourceLink --version $sourceLinkVersion
 # see https://github.com/gabrielweyer/xunit-to-junit
 # see https://www.nuget.org/packages/dotnet-xunit-to-junit
 # renovate: datasource=nuget depName=dotnet-xunit-to-junit
-$dotnetXunitToJunitVersion = '4.0.0'
+$dotnetXunitToJunitVersion = '5.0.0'
 dotnet tool install --global dotnet-xunit-to-junit --version $dotnetXunitToJunitVersion
 
 # install the report generator.
