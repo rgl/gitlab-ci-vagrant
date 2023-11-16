@@ -1,11 +1,11 @@
 # see https://learn.microsoft.com/en-us/virtualization/windowscontainers/manage-docker/configure-docker-daemon
 # see https://docs.docker.com/engine/installation/linux/docker-ce/binaries/#install-server-and-client-binaries-on-windows
-# see https://github.com/moby/moby/releases/tag/v24.0.6
-# see https://github.com/rgl/docker-ce-windows-binaries-vagrant/releases/tag/v24.0.6
+# see https://github.com/moby/moby/releases/tag/v24.0.7
+# see https://github.com/rgl/docker-ce-windows-binaries-vagrant/releases/tag/v24.0.7
 
 # download install the docker binaries.
 # renovate: datasource=github-releases depName=rgl/docker-ce-windows-binaries-vagrant
-$archiveVersion = '24.0.6'
+$archiveVersion = '24.0.7'
 $archiveName = "docker-$archiveVersion.zip"
 $archiveUrl = "https://github.com/rgl/docker-ce-windows-binaries-vagrant/releases/download/v$archiveVersion/$archiveName"
 $archivePath = "$env:TEMP\$archiveName"
