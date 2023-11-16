@@ -7,8 +7,8 @@ source /etc/profile.d/opt-out-dotnet-cli-telemetry.sh
 
 # pin the microsoft apt repository packages above the distro ones.
 # see apt-cache policy
-# see apt-cache policy dotnet-sdk-6.0
-# see apt-cache showpkg dotnet-sdk-6.0
+# see apt-cache policy dotnet-sdk-8.0
+# see apt-cache showpkg dotnet-sdk-8.0
 # see http://manpages.ubuntu.com/manpages/jammy/en/man5/apt_preferences.5.html
 cat >/etc/apt/preferences.d/packages.microsoft.com.pref <<'EOF'
 Package: *
@@ -23,7 +23,7 @@ dpkg -i packages-microsoft-prod.deb
 rm packages-microsoft-prod.deb
 apt-get install -y apt-transport-https
 apt-get update
-apt-get install -y dotnet-sdk-6.0
+apt-get install -y dotnet-sdk-8.0
 
 # show versions.
 dotnet --info
