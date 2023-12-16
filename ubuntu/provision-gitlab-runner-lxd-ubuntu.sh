@@ -21,6 +21,8 @@ fi
 lxc init $base_image_name $image_name </dev/null
 lxc config set $image_name boot.autostart=false
 # configure the container to run nested docker managed containers.
+# see https://linuxcontainers.org/incus/docs/main/explanation/security/#container-security
+# see https://linuxcontainers.org/incus/docs/main/reference/instance_options/#security-policies
 # see https://ubuntu.com/tutorials/how-to-run-docker-inside-lxd-containers
 # see https://www.youtube.com/watch?v=_fCSSEyiGro
 lxc config set $image_name \
