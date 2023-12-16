@@ -27,6 +27,9 @@ wget -qO- https://packages.gitlab.com/install/repositories/runner/gitlab-runner/
 # NB the gitlab-runner daemon manages this node registered runners.
 apt-get install -y "gitlab-runner=$gitlab_runner_version"
 
+# let the gitlab-runner user manage docker.
+usermod -aG docker gitlab-runner
+
 # configure the shell runner.
 # see https://docs.gitlab.com/runner/executors/shell.html
 os_name="$(lsb_release -si)"
