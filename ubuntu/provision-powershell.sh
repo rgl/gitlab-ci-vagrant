@@ -2,15 +2,15 @@
 set -euxo pipefail
 
 # opt-out of telemetry.
-# see https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_telemetry?view=powershell-7.2
+# see https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_telemetry?view=powershell-7.4
 echo 'export POWERSHELL_TELEMETRY_OPTOUT=1' >/etc/profile.d/opt-out-powershell-telemetry.sh
 source /etc/profile.d/opt-out-powershell-telemetry.sh
 
 # install.
-# see https://learn.microsoft.com/en-us/powershell/scripting/install/install-ubuntu?view=powershell-7.2
+# see https://learn.microsoft.com/en-us/powershell/scripting/install/install-ubuntu?view=powershell-7.4
 # see https://github.com/PowerShell/PowerShell/releases
-# renovate: datasource=github-releases depName=PowerShell/PowerShell extractVersion=^v(?<version>7\.2\..+)
-powershell_version='7.2.17'
+# renovate: datasource=github-releases depName=PowerShell/PowerShell extractVersion=^v(?<version>7\.4\..+)
+powershell_version='7.4.0'
 wget -qO packages-microsoft-prod.deb "https://packages.microsoft.com/config/ubuntu/$(lsb_release -s -r)/packages-microsoft-prod.deb"
 dpkg -i packages-microsoft-prod.deb
 rm packages-microsoft-prod.deb
