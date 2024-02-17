@@ -248,7 +248,7 @@ function Install-GitLabRunner($runners) {
     }
 
     # grant the logon as service permission to the gitlab-runner account.
-    Grant-Privilege $gitLabRunnerAccountName 'SeServiceLogonRight'
+    Grant-CPrivilege $gitLabRunnerAccountName 'SeServiceLogonRight'
 
     # grant docker access to the gitlab-runner account.
     Add-LocalGroupMember -Group docker-users -Member $gitLabRunnerAccountName
