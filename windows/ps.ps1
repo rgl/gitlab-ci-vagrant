@@ -27,6 +27,7 @@ function Write-Title($title) {
 # see https://hub.docker.com/_/microsoft-windows-servercore
 # see https://hub.docker.com/_/microsoft-windows-server
 # see https://hub.docker.com/_/microsoft-windows
+# see https://hub.docker.com/_/microsoft-powershell
 # see https://mcr.microsoft.com/v2/windows/nanoserver/tags/list
 # see https://mcr.microsoft.com/v2/windows/servercore/tags/list
 # see https://mcr.microsoft.com/v2/windows/server/tags/list
@@ -34,7 +35,6 @@ function Write-Title($title) {
 # see https://mcr.microsoft.com/v2/powershell/tags/list
 # see https://mcr.microsoft.com/v2/dotnet/sdk/tags/list
 # see https://mcr.microsoft.com/v2/dotnet/runtime/tags/list
-# see https://hub.docker.com/_/golang/
 # see https://learn.microsoft.com/en-us/windows/release-health/
 # see https://learn.microsoft.com/en-us/windows/release-health/windows-server-release-info
 # see Get-WindowsVersion at https://github.com/rgl/windows-vagrant/blob/master/example/summary.ps1
@@ -54,6 +54,7 @@ function Get-WindowsContainers {
         } else {
             "mcr.microsoft.com/windows`:$windowsVersionTag"
         }
+        pwsh = "mcr.microsoft.com/powershell:7.4-windowsservercore-$windowsVersionTag"
     }
 }
 

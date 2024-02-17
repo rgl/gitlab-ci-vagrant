@@ -119,7 +119,7 @@ function Install-GitLabRunner($runners) {
                 'Allow')))
     Set-Acl $configureGitLabRunnerServiceHome $acl
     Copy-Item C:\vagrant\windows\configure-gitlab-runner-home.ps1 $configureGitLabRunnerServiceHome
-    nssm install $configureGitLabRunnerServiceName PowerShell.exe
+    nssm install $configureGitLabRunnerServiceName pwsh.exe
     nssm set $configureGitLabRunnerServiceName AppParameters `
         '-NoLogo' `
         '-NoProfile' `
@@ -278,17 +278,6 @@ Install-GitLabRunner @(
         '--executor'
             'shell'
         '--shell'
-            'powershell'
-        '--tag-list'
-            "powershell,shell,$runnerBuildToolsTag,windows,$($windowsContainers.tag)"
-        '--description'
-            "PowerShell / $runnerBuildToolsDescription / Windows $($windowsContainers.tag)"
-    )
-    # see https://docs.gitlab.com/runner/executors/shell.html
-    ,@(
-        '--executor'
-            'shell'
-        '--shell'
             'pwsh'
         '--tag-list'
             "pwsh,shell,$runnerBuildToolsTag,windows,$($windowsContainers.tag)"
@@ -309,9 +298,9 @@ Install-GitLabRunner @(
         '--executor'
             'docker-windows'
         '--shell'
-            'powershell'
+            'pwsh'
         '--docker-image'
-            $windowsContainers.servercore
+            $windowsContainers.pwsh
         '--docker-extra-hosts'
             "$config_gitlab_fqdn`:$config_gitlab_ip"
     )

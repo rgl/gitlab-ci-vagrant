@@ -62,7 +62,7 @@ Vagrant.configure('2') do |config|
           [options[:hyperv__bridge], mac_address_spoofing]
         end
         system(
-          'PowerShell',
+          'pwsh',
           '-NoLogo',
           '-NoProfile',
           '-ExecutionPolicy',

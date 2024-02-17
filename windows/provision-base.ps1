@@ -80,6 +80,16 @@ public static class WindowsWallpaper
 [IO.File]::WriteAllText(
     "$env:USERPROFILE\ConfigureDesktop.ps1",
 @'
+Set-StrictMode -Version Latest
+$ErrorActionPreference = 'Stop'
+$ProgressPreference = 'SilentlyContinue'
+trap {
+    Write-Host "ERROR: $_"
+    ($_.ScriptStackTrace -split '\r?\n') -replace '^(.*)$','ERROR: $1' | Write-Host
+    ($_.Exception.ToString() -split '\r?\n') -replace '^(.*)$','ERROR EXCEPTION: $1' | Write-Host
+    Exit 1
+}
+
 # unpin all applications from the taskbar.
 # NB this can only be done in a logged on session.
 $pinnedTaskbarPath = "$env:APPDATA\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar"
@@ -135,7 +145,7 @@ Get-ChildItem "$PSScriptRoot\ConfigureDesktop-*.ps1" `
 (Get-Process explorer).Kill()
 '@)
 New-Item -Path HKCU:Software\Microsoft\Windows\CurrentVersion\RunOnce -Force `
-    | New-ItemProperty -Name ConfigureDesktop -Value 'PowerShell -WindowStyle Hidden -File "%USERPROFILE%\ConfigureDesktop.ps1"' -PropertyType ExpandString `
+    | New-ItemProperty -Name ConfigureDesktop -Value 'pwsh.exe -WindowStyle Hidden -File "%USERPROFILE%\ConfigureDesktop.ps1"' -PropertyType ExpandString `
     | Out-Null
 
 # set default Explorer location to This PC.
