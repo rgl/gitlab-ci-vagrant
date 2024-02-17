@@ -62,6 +62,12 @@ apt-get install -y git-core
 
 
 #
+# install jq.
+
+apt-get install -y jq
+
+
+#
 # create artifacts that need to be shared with the other nodes.
 
 mkdir -p /vagrant/tmp

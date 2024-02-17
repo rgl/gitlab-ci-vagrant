@@ -207,20 +207,21 @@ function Install-GitLabRunner($runners) {
 
     # register the gitlab runner with gitlab.
     # see https://docs.gitlab.com/runner/register/index.html#one-line-registration-command
-    $gitLabRunnerRegistrationToken = Get-Content C:\vagrant\tmp\gitlab-runners-registration-token.txt
     # NB temporarily prevent powershell from raising an exception when something
     #    is written to stderr by $gitLabRunnerPath, as that is expected.
     $ErrorActionPreference = 'Continue'
     try {
-        $runners | ForEach-Object {
+        $runners.GetEnumerator() | ForEach-Object {
+            $gitLabRunnerAuthenticationToken = (Get-Content `
+                "C:\vagrant\tmp\gitlab-runner-authentication-token-windows-2022-$($_.Name).json" `
+                | ConvertFrom-Json).token
             &$gitLabRunnerPath `
                 register `
                 --non-interactive `
                 --config $gitLabRunnerConfigPath `
                 --url "https://$config_gitlab_fqdn" `
-                --registration-token $gitLabRunnerRegistrationToken `
-                --locked=false `
-                @_
+                --token $gitLabRunnerAuthenticationToken `
+                @($_.Value)
             if ($LASTEXITCODE) {
                 throw "failed to register $gitLabRunnerAccountName with exit code $LASTEXITCODE"
             }
@@ -268,19 +269,16 @@ $buildTools = &"C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere
     | ForEach-Object {
         $_.catalog.productLineVersion
     }
-$runnerBuildToolsTag = ($buildTools | ForEach-Object { "vs$_" }) -join ','
 $runnerBuildToolsDescription = "Visual Studio $($buildTools -join '/')"
 
 # install the gitlab-runner service and runners/executors.
-Install-GitLabRunner @(
+Install-GitLabRunner @{
     # see https://docs.gitlab.com/runner/executors/shell.html
-    ,@(
+    shell = @(
         '--executor'
             'shell'
         '--shell'
             'pwsh'
-        '--tag-list'
-            "pwsh,shell,$runnerBuildToolsTag,windows,$($windowsContainers.tag)"
         '--description'
             "pwsh / $runnerBuildToolsDescription / Windows $($windowsContainers.tag)"
     )
@@ -290,21 +288,19 @@ Install-GitLabRunner @(
     #    this vagrant environment by having a recursive dns server in the gitlab
     #    vm and configure this vm to use that dns server.
     #    see https://github.com/moby/moby/issues/41165
-    ,@(
-        '--tag-list'
-            "docker,windows,$($windowsContainers.tag)"
-        '--description'
-            "Docker / Windows $($windowsContainers.tag)"
+    docker = @(
         '--executor'
             'docker-windows'
         '--shell'
             'pwsh'
+        '--description'
+            "Docker / Windows $($windowsContainers.tag)"
         '--docker-image'
             $windowsContainers.pwsh
         '--docker-extra-hosts'
             "$config_gitlab_fqdn`:$config_gitlab_ip"
     )
-)
+}
 
 # create artifacts that need to be shared with the other nodes.
 mkdir -Force C:\vagrant\tmp | Out-Null
