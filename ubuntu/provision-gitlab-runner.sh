@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euxo pipefail
 
-gitlab_runner_version="${1:-16.8.0}"; shift || true
+gitlab_runner_version="${1:-16.9.1}"; shift || true
 os_name="$(lsb_release -si)"
 os_version="$(lsb_release -sr)"
 config_gitlab_fqdn=$(hostname --domain)
@@ -24,9 +24,10 @@ update-ca-certificates
 
 apt-get install -y --no-install-recommends curl
 wget -qO- https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh | bash
+gitlab_runner_package_version="$(apt-cache madison gitlab-runner | perl -ne "/gitlab-runner \\|\\s+(\\Q$gitlab_runner_version\\E[^ .|]*)\\s+\\|/ && print \$1" | head -1)"
 # NB the gitlab-runner daemon runs as root and launches jobs as the gitlab-runner user.
 # NB the gitlab-runner daemon manages this node registered runners.
-apt-get install -y "gitlab-runner=$gitlab_runner_version"
+apt-get install -y "gitlab-runner=$gitlab_runner_package_version"
 
 # let the gitlab-runner user manage docker.
 usermod -aG docker gitlab-runner

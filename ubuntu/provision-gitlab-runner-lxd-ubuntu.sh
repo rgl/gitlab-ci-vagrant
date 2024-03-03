@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euxo pipefail
 
-gitlab_runner_version="${1:-16.8.0}"; shift || true
+gitlab_runner_version="${1:-16.9.1}"; shift || true
 docker_version="${1:-25.0.3}"; shift || true
 os_name="$(lsb_release -si)"
 os_version="$(lsb_release -sr)"
@@ -62,7 +62,8 @@ apt-get install -y git-lfs
 # install the gitlab-runner binary.
 # see https://docs.gitlab.com/runner/install/linux-repository.html
 wget -qO- https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh | bash
-apt-get install -y "gitlab-runner=$gitlab_runner_version"
+gitlab_runner_package_version="$(apt-cache madison gitlab-runner | perl -ne "/gitlab-runner \\|\\s+(\\Q$gitlab_runner_version\\E[^ .|]*)\\s+\\|/ && print \$1" | head -1)"
+apt-get install -y "gitlab-runner=$gitlab_runner_package_version"
 systemctl disable --now gitlab-runner
 
 # make sure there are no shell configuration files (at least .bash_logout).
