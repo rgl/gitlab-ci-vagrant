@@ -20,8 +20,8 @@ wget -qO- https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/a
 echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/download.docker.com.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" >/etc/apt/sources.list.d/docker.list
 apt-get update
 apt-cache madison docker-ce
-docker_version="$(apt-cache madison docker-ce | awk "/$docker_version/{print \$3}")"
-apt-get install -y "docker-ce=$docker_version" "docker-ce-cli=$docker_version" containerd.io
+docker_package_version="$(apt-cache madison docker-ce | awk "/$docker_version/{print \$3}")"
+apt-get install -y "docker-ce=$docker_package_version" "docker-ce-cli=$docker_package_version" containerd.io
 
 # configure it.
 systemctl stop docker
