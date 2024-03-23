@@ -32,19 +32,6 @@ apt-get install -y "gitlab-runner=$gitlab_runner_package_version"
 # let the gitlab-runner user manage docker.
 usermod -aG docker gitlab-runner
 
-# configure the shell runner.
-# see https://docs.gitlab.com/runner/executors/shell.html
-config_gitlab_runner_authentication_token="$(
-    jq -r \
-        .token \
-        /vagrant/tmp/gitlab-runner-authentication-token-${os_name,,}-${os_version}-shell.json)"
-gitlab-runner \
-    register \
-    --non-interactive \
-    --url "https://$config_gitlab_fqdn" \
-    --token "$config_gitlab_runner_authentication_token" \
-    --executor 'shell'
-
 # configure the docker runner.
 # see https://docs.gitlab.com/runner/executors/docker.html
 config_gitlab_runner_authentication_token="$(
