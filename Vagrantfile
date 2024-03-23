@@ -6,14 +6,29 @@ ENV['VAGRANT_EXPERIMENTAL'] = 'typed_triggers'
 # renovate: datasource=gitlab-tags depName=gitlab-org/gitlab-runner
 GITLAB_RUNNER_VERSION = '16.10.0'
 
+# see https://github.com/lxc/incus/releases
+# NB incus tag has a three component version number of MAJOR.MINOR.PATCH but the
+#    package is versioned differently, as MAJOR.MINOR-DATE, so, we use a two
+#    component version here.
+#    see https://github.com/lxc/incus/issues/240#issuecomment-1853333228
+# renovate: datasource=github-releases depName=lxc/incus extractVersion=v(?<version>\d+\.\d+)(\.\d+)?
+INCUS_VERSION = "0.6"
+
+# see https://linuxcontainers.org/incus/docs/main/reference/storage_drivers/#storage-drivers
+# see https://linuxcontainers.org/incus/docs/main/reference/storage_btrfs/
+# see https://linuxcontainers.org/incus/docs/main/reference/storage_zfs/
+INCUS_STORAGE_DRIVER = "btrfs" # or zfs.
+
 # link to the gitlab-vagrant environment:
 CONFIG_GITLAB_FQDN  = 'gitlab.example.com'
 CONFIG_GITLAB_IP    = '10.10.9.99'
 # runner nodes:
 CONFIG_UBUNTU_FQDN  = "ubuntu.#{CONFIG_GITLAB_FQDN}"
 CONFIG_UBUNTU_IP    = '10.10.9.98'
+CONFIG_INCUS_FQDN   = "incus.#{CONFIG_GITLAB_FQDN}"
+CONFIG_INCUS_IP     = '10.10.9.97'
 CONFIG_WINDOWS_FQDN = "windows.#{CONFIG_GITLAB_FQDN}"
-CONFIG_WINDOWS_IP   = '10.10.9.97'
+CONFIG_WINDOWS_IP   = '10.10.9.96'
 
 CONFIG_OS_DISK_SIZE_GB = 32
 
@@ -97,6 +112,23 @@ Vagrant.configure('2') do |config|
     config.vm.provision :shell, path: 'ubuntu/provision-gitlab-runner-docker.sh'
     config.vm.provision :shell, path: 'ubuntu/provision-gitlab-runner-lxd-ubuntu.sh', args: [GITLAB_RUNNER_VERSION]
     config.vm.provision :shell, path: 'ubuntu/provision-gitlab-runner-lxd.sh'
+  end
+
+  config.vm.define :incus do |config|
+    config.vm.provider :libvirt do |lv, config|
+      lv.storage :file, :serial => 'incus', :size => '60G', :bus => 'scsi', :discard => 'unmap', :cache => 'unsafe'
+    end
+    config.vm.box = 'ubuntu-22.04-amd64'
+    config.vm.hostname = CONFIG_INCUS_FQDN
+    config.vm.network :private_network, ip: CONFIG_INCUS_IP, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false, hyperv__bridge: 'gitlab'
+    config.vm.provision :shell, path: 'configure-hyperv-guest.sh', args: [CONFIG_INCUS_IP]
+    config.vm.provision :shell, inline: "echo '#{CONFIG_GITLAB_IP} #{CONFIG_GITLAB_FQDN}' >>/etc/hosts"
+    config.vm.provision :shell, path: 'ubuntu/provision-resize-disk.sh'
+    config.vm.provision :shell, path: 'ubuntu/provision-base.sh'
+    config.vm.provision :shell, path: 'ubuntu/provision-incus.sh', args: [INCUS_VERSION, INCUS_STORAGE_DRIVER]
+    config.vm.provision :shell, path: 'ubuntu/provision-gitlab-runner.sh', args: [GITLAB_RUNNER_VERSION]
+    config.vm.provision :shell, path: 'ubuntu/provision-gitlab-runner-incus-ubuntu.sh', args: [GITLAB_RUNNER_VERSION]
+    config.vm.provision :shell, path: 'ubuntu/provision-gitlab-runner-incus.sh'
   end
 
   config.vm.define :windows do |config|
