@@ -6,6 +6,32 @@ This is to be used after [rgl/gitlab-vagrant](https://github.com/rgl/gitlab-vagr
 
 This is analogous to Jenkins slave nodes of the [rgl/jenkins-vagrant](https://github.com/rgl/jenkins-vagrant) environment, but using GitLab-CI instead of Jenkins.
 
+This includes:
+
+* `ubuntu` node:
+  * `shell` runner.
+    * Docker and Docker Compose.
+    * Bash.
+    * PowerShell.
+    * .NET SDK.
+  * `docker` runner.
+    * Runs jobs in ephemeral application containers.
+  * `lxd` runner.
+    * Docker and Docker Compose.
+    * Runs jobs in ephemeral system containers.
+* `incus` node:
+  * `incus` runner.
+    * Docker and Docker Compose.
+    * Runs jobs in ephemeral system containers.
+* `windows` node:
+  * `shell` runner.
+    * Docker and Docker Compose.
+    * PowerShell.
+    * .NET SDK.
+    * Visual Studio Build Tools.
+  * `docker` runner.
+    * Runs jobs in ephemeral application containers.
+
 # Usage
 
 From the `../gitlab-vagrant` directory, start GitLab as described at [rgl/gitlab-vagrant](https://github.com/rgl/gitlab-vagrant).
