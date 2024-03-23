@@ -29,24 +29,6 @@ gitlab_runner_package_version="$(apt-cache madison gitlab-runner | perl -ne "/gi
 # NB the gitlab-runner daemon manages this node registered runners.
 apt-get install -y "gitlab-runner=$gitlab_runner_package_version"
 
-# let the gitlab-runner user manage docker.
-usermod -aG docker gitlab-runner
-
-# configure the docker runner.
-# see https://docs.gitlab.com/runner/executors/docker.html
-config_gitlab_runner_authentication_token="$(
-    jq -r \
-        .token \
-        /vagrant/tmp/gitlab-runner-authentication-token-${os_name,,}-${os_version}-docker.json)"
-gitlab-runner \
-    register \
-    --non-interactive \
-    --url "https://$config_gitlab_fqdn" \
-    --token "$config_gitlab_runner_authentication_token" \
-    --executor 'docker' \
-    --docker-image "${os_name,,}:${os_version}" \
-    --docker-extra-hosts "$config_gitlab_fqdn:$config_gitlab_ip"
-
 # make sure there are no shell configuration files (at least .bash_logout).
 # NB these were copied from the /etc/skel directory when the gitlab-runner
 #    user was created but are not really needed.
