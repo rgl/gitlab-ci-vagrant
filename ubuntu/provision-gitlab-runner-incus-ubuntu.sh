@@ -3,6 +3,7 @@ set -euxo pipefail
 
 gitlab_runner_version="${1:-16.10.0}"; shift || true
 docker_version="${1:-26.0.0}"; shift || true
+docker_compose_version="${1:-2.26.0}"; shift || true
 os_name="$(lsb_release -si)"
 os_version="$(lsb_release -sr)"
 os_codename="$(lsb_release -sc)"
@@ -33,6 +34,7 @@ incus start $image_name
 incus exec $image_name \
     --env "gitlab_runner_version=$gitlab_runner_version" \
     --env "docker_version=$docker_version" \
+    --env "docker_compose_version=$docker_compose_version" \
     -- bash <<'LXCEXEC'
 set -euxo pipefail
 
@@ -84,6 +86,13 @@ apt-get update
 apt-cache madison docker-ce
 docker_version="$(apt-cache madison docker-ce | awk "/$docker_version/{print \$3}")"
 apt-get install -y "docker-ce=$docker_version" "docker-ce-cli=$docker_version" containerd.io
+
+# install docker compose.
+docker_compose_url="https://github.com/docker/compose/releases/download/v$docker_compose_version/docker-compose-linux-$(uname -m)"
+wget -qO /tmp/docker-compose "$docker_compose_url"
+install -d /usr/local/lib/docker/cli-plugins
+install -m 555 /tmp/docker-compose /usr/local/lib/docker/cli-plugins
+rm /tmp/docker-compose
 
 # dump information.
 uname -a
