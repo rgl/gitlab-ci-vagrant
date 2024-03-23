@@ -9,7 +9,7 @@ set -euxo pipefail
 apt-get install -y zfsutils-linux
 
 # this will be used for the lxd storage.
-storage_device='/dev/sdb'
+storage_device='/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_lxd'
 
 # init lxd.
 lxd init --preseed <<EOF

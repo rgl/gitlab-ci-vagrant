@@ -78,7 +78,7 @@ Vagrant.configure('2') do |config|
 
   config.vm.define :ubuntu do |config|
     config.vm.provider :libvirt do |lv, config|
-      lv.storage :file, :size => '30G', :bus => 'scsi', :discard => 'unmap', :cache => 'unsafe'
+      lv.storage :file, :serial => 'lxd', :size => '60G', :bus => 'scsi', :discard => 'unmap', :cache => 'unsafe'
     end
     config.vm.box = 'ubuntu-22.04-amd64'
     config.vm.hostname = CONFIG_UBUNTU_FQDN
