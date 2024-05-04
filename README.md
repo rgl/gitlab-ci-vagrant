@@ -40,6 +40,7 @@ At this repository directory, start the runner nodes:
 
 ```bash
 vagrant up --no-destroy-on-error ubuntu
+vagrant up --no-destroy-on-error incus
 vagrant up --no-destroy-on-error windows
 ```
 
