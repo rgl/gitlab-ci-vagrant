@@ -9,9 +9,11 @@ os_version="$(lsb_release -sr)"
 os_codename="$(lsb_release -sc)"
 os_arch="$(uname -m)"
 image_name="gitlab-runner-lxd-${os_name,,}"
-# see https://uk.lxd.images.canonical.com/
-# see lxc image list images:${os_name,,}/ type=container architecture=${os_arch,,}
-base_image_name="images:${os_name,,}/${os_codename}"
+# see https://cloud-images.ubuntu.com/minimal/releases
+# see https://images.lxd.canonical.com
+# see lxc remote list
+# see lxc image list ubuntu-minimal: type=container architecture=${os_arch,,}
+base_image_name="ubuntu-minimal:$os_version"
 
 # delete the existing container.
 if lxc info "$image_name" >/dev/null 2>&1; then
