@@ -12,7 +12,7 @@ GITLAB_RUNNER_VERSION = '16.11.1'
 #    component version here.
 #    see https://github.com/lxc/incus/issues/240#issuecomment-1853333228
 # renovate: datasource=github-releases depName=lxc/incus extractVersion=v(?<version>\d+\.\d+)(\.\d+)?
-INCUS_VERSION = "6.0"
+INCUS_VERSION = "6.1"
 
 # see https://linuxcontainers.org/incus/docs/main/reference/storage_drivers/#storage-drivers
 # see https://linuxcontainers.org/incus/docs/main/reference/storage_btrfs/

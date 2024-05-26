@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euxo pipefail
 
-incus_version="${1:-6.0}"; shift || true
+incus_version="${1:-6.1}"; shift || true
 storage_driver="${1:-btrfs}"; shift || true
 storage_device='/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_incus'
 
