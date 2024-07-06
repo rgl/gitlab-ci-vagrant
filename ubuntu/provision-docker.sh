@@ -3,7 +3,7 @@ set -eux
 
 # see https://github.com/moby/moby/releases
 # renovate: datasource=github-releases depName=moby/moby
-docker_version='26.1.4'
+docker_version='27.0.3'
 
 # prevent apt-get et al from asking questions.
 # NB even with this, you'll still get some warnings that you can ignore:
