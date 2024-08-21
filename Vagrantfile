@@ -27,8 +27,10 @@ CONFIG_UBUNTU_FQDN  = "ubuntu.#{CONFIG_GITLAB_FQDN}"
 CONFIG_UBUNTU_IP    = '10.10.9.98'
 CONFIG_INCUS_FQDN   = "incus.#{CONFIG_GITLAB_FQDN}"
 CONFIG_INCUS_IP     = '10.10.9.97'
+CONFIG_LXD_FQDN     = "lxd.#{CONFIG_GITLAB_FQDN}"
+CONFIG_LXD_IP       = '10.10.9.96'
 CONFIG_WINDOWS_FQDN = "windows.#{CONFIG_GITLAB_FQDN}"
-CONFIG_WINDOWS_IP   = '10.10.9.96'
+CONFIG_WINDOWS_IP   = '10.10.9.95'
 
 CONFIG_OS_DISK_SIZE_GB = 32
 
@@ -85,9 +87,6 @@ Vagrant.configure('2') do |config|
   end
 
   config.vm.define :ubuntu do |config|
-    config.vm.provider :libvirt do |lv, config|
-      lv.storage :file, :serial => 'lxd', :size => '60G', :bus => 'scsi', :discard => 'unmap', :cache => 'unsafe'
-    end
     config.vm.box = 'ubuntu-22.04-amd64'
     config.vm.hostname = CONFIG_UBUNTU_FQDN
     config.vm.network :private_network, ip: CONFIG_UBUNTU_IP, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false, hyperv__bridge: 'gitlab'
@@ -95,7 +94,6 @@ Vagrant.configure('2') do |config|
     config.vm.provision :shell, inline: "echo '#{CONFIG_GITLAB_IP} #{CONFIG_GITLAB_FQDN}' >>/etc/hosts"
     config.vm.provision :shell, path: 'ubuntu/provision-resize-disk.sh'
     config.vm.provision :shell, path: 'ubuntu/provision-base.sh'
-    config.vm.provision :shell, path: 'ubuntu/provision-lxd.sh'
     config.vm.provision :shell, path: 'ubuntu/provision-docker.sh'
     config.vm.provision :shell, path: 'ubuntu/provision-docker-compose.sh'
     config.vm.provision :shell, path: 'ubuntu/provision-powershell.sh'
@@ -103,8 +101,6 @@ Vagrant.configure('2') do |config|
     config.vm.provision :shell, path: 'ubuntu/provision-gitlab-runner.sh', args: [GITLAB_RUNNER_VERSION]
     config.vm.provision :shell, path: 'ubuntu/provision-gitlab-runner-shell.sh'
     config.vm.provision :shell, path: 'ubuntu/provision-gitlab-runner-docker.sh'
-    config.vm.provision :shell, path: 'ubuntu/provision-gitlab-runner-lxd-ubuntu.sh', args: [GITLAB_RUNNER_VERSION]
-    config.vm.provision :shell, path: 'ubuntu/provision-gitlab-runner-lxd.sh'
   end
 
   config.vm.define :incus do |config|
@@ -123,6 +119,23 @@ Vagrant.configure('2') do |config|
     config.vm.provision :shell, path: 'ubuntu/provision-gitlab-runner-incus-ubuntu.sh', args: [GITLAB_RUNNER_VERSION]
     config.vm.provision :shell, path: 'ubuntu/provision-gitlab-runner-incus.sh'
   end
+
+  config.vm.define :lxd do |config|
+    config.vm.provider :libvirt do |lv, config|
+      lv.storage :file, :serial => 'lxd', :size => '60G', :bus => 'scsi', :discard => 'unmap', :cache => 'unsafe'
+    end
+    config.vm.box = 'ubuntu-22.04-amd64'
+    config.vm.hostname = CONFIG_LXD_FQDN
+    config.vm.network :private_network, ip: CONFIG_LXD_IP, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false, hyperv__bridge: 'gitlab'
+    config.vm.provision :shell, path: 'configure-hyperv-guest.sh', args: [CONFIG_LXD_IP]
+    config.vm.provision :shell, inline: "echo '#{CONFIG_GITLAB_IP} #{CONFIG_GITLAB_FQDN}' >>/etc/hosts"
+    config.vm.provision :shell, path: 'ubuntu/provision-resize-disk.sh'
+    config.vm.provision :shell, path: 'ubuntu/provision-base.sh'
+    config.vm.provision :shell, path: 'ubuntu/provision-lxd.sh'
+    config.vm.provision :shell, path: 'ubuntu/provision-gitlab-runner.sh', args: [GITLAB_RUNNER_VERSION]
+    config.vm.provision :shell, path: 'ubuntu/provision-gitlab-runner-lxd-ubuntu.sh', args: [GITLAB_RUNNER_VERSION]
+    config.vm.provision :shell, path: 'ubuntu/provision-gitlab-runner-lxd.sh'
+end
 
   config.vm.define :windows do |config|
     config.vm.provider :libvirt do |lv, config|
