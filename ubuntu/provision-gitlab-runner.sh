@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euxo pipefail
 
-gitlab_runner_version="${1:-17.4.0}"; shift || true
+gitlab_runner_version="${1:-17.5.1}"; shift || true
 os_name="$(lsb_release -si)"
 os_version="$(lsb_release -sr)"
 config_gitlab_fqdn=$(hostname --domain)
