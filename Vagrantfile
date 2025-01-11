@@ -135,7 +135,7 @@ Vagrant.configure('2') do |config|
     config.vm.provision :shell, path: 'ubuntu/provision-gitlab-runner.sh', args: [GITLAB_RUNNER_VERSION]
     config.vm.provision :shell, path: 'ubuntu/provision-gitlab-runner-lxd-ubuntu.sh', args: [GITLAB_RUNNER_VERSION]
     config.vm.provision :shell, path: 'ubuntu/provision-gitlab-runner-lxd.sh'
-end
+  end
 
   config.vm.define :windows do |config|
     config.vm.provider :libvirt do |lv, config|
