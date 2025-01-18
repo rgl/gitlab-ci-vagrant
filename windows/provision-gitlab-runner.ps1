@@ -207,6 +207,8 @@ function Install-GitLabRunner($runners) {
 
     # register the gitlab runner with gitlab.
     # see https://docs.gitlab.com/runner/register/index.html#one-line-registration-command
+    # see https://docs.gitlab.com/runner/configuration/feature-flags.html
+    # see https://docs.gitlab.com/ee/ci/jobs/job_logs.html#job-log-timestamps
     # NB temporarily prevent powershell from raising an exception when something
     #    is written to stderr by $gitLabRunnerPath, as that is expected.
     $ErrorActionPreference = 'Continue'
@@ -221,6 +223,7 @@ function Install-GitLabRunner($runners) {
                 --config $gitLabRunnerConfigPath `
                 --url "https://$config_gitlab_fqdn" `
                 --token $gitLabRunnerAuthenticationToken `
+                --env 'FF_TIMESTAMPS=true' `
                 @($_.Value)
             if ($LASTEXITCODE) {
                 throw "failed to register $gitLabRunnerAccountName with exit code $LASTEXITCODE"

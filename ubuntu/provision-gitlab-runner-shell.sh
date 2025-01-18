@@ -7,6 +7,8 @@ config_gitlab_fqdn=$(hostname --domain)
 
 # configure the shell runner.
 # see https://docs.gitlab.com/runner/executors/shell.html
+# see https://docs.gitlab.com/runner/configuration/feature-flags.html
+# see https://docs.gitlab.com/ee/ci/jobs/job_logs.html#job-log-timestamps
 config_gitlab_runner_authentication_token="$(
     jq -r \
         .token \
@@ -16,4 +18,5 @@ gitlab-runner \
     --non-interactive \
     --url "https://$config_gitlab_fqdn" \
     --token "$config_gitlab_runner_authentication_token" \
+    --env 'FF_TIMESTAMPS=true' \
     --executor 'shell'
