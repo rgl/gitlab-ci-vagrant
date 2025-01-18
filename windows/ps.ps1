@@ -47,12 +47,12 @@ function Get-WindowsContainers {
     }[$windowsBuildNumber]
     @{
         tag = $windowsVersionTag
-        nanoserver = "mcr.microsoft.com/windows/nanoserver`:$windowsVersionTag"
-        servercore = "mcr.microsoft.com/windows/servercore`:$windowsVersionTag"
+        nanoserver = "mcr.microsoft.com/windows/nanoserver:$windowsVersionTag"
+        servercore = "mcr.microsoft.com/windows/servercore:$windowsVersionTag"
         server = if ($windowsBuildNumber -ge 20348) {
-            "mcr.microsoft.com/windows/server`:$windowsVersionTag"
+            "mcr.microsoft.com/windows/server:$windowsVersionTag"
         } else {
-            "mcr.microsoft.com/windows`:$windowsVersionTag"
+            "mcr.microsoft.com/windows:$windowsVersionTag"
         }
         pwsh = "mcr.microsoft.com/powershell:7.4-windowsservercore-$windowsVersionTag"
     }
