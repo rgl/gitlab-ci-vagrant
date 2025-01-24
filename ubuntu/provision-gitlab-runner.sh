@@ -11,9 +11,9 @@ export DEBIAN_FRONTEND=noninteractive
 
 
 #
-# trust the gitlab certificate.
+# trust the gitlab ca certificate.
 
-install "/vagrant/tmp/$config_gitlab_fqdn-crt.pem" "/usr/local/share/ca-certificates/$config_gitlab_fqdn.crt"
+install /vagrant/tmp/gitlab-ca-crt.pem /usr/local/share/ca-certificates/gitlab-ca.crt
 update-ca-certificates
 
 

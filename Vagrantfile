@@ -167,8 +167,8 @@ Vagrant.configure('2') do |config|
       inline: '''bash -euc \'
 mkdir -p tmp
 artifacts=(
-  ../gitlab-vagrant/tmp/gitlab.example.com-crt.pem
-  ../gitlab-vagrant/tmp/gitlab.example.com-crt.der
+  ../gitlab-vagrant/tmp/gitlab-ca/gitlab-ca-crt.pem
+  ../gitlab-vagrant/tmp/gitlab-ca/gitlab-ca-crt.der
   ../gitlab-vagrant/tmp/gitlab-runner-authentication-token-*.json
 )
 for artifact in "${artifacts[@]}"; do

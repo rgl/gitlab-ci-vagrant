@@ -59,9 +59,9 @@ Install-ChocolateyShortcut `
     -ShortcutFilePath 'C:\Users\All Users\Microsoft\Windows\Start Menu\Programs\Process Monitor.lnk' `
     -TargetPath 'C:\ProgramData\chocolatey\lib\procmon\tools\procmon.exe'
 
-# import the GitLab site https certificate into the local machine trust store.
+# import the GitLab CA certificate into the local machine trust store.
 Import-Certificate `
-    -FilePath C:/vagrant/tmp/$config_gitlab_fqdn-crt.der `
+    -FilePath C:/vagrant/tmp/gitlab-ca-crt.der `
     -CertStoreLocation Cert:/LocalMachine/Root
 
 # restart the SSH service so it can re-read the environment (e.g. the system environment
