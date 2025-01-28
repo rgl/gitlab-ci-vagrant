@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euxo pipefail
 
-incus_version="${1:-6.8}"; shift || true
+incus_version="${1:-6.9}"; shift || true
 storage_driver="${1:-btrfs}"; shift || true
 storage_device='/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_incus'
 
@@ -89,7 +89,10 @@ echo "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/zabbly.gpg] https://pkgs.
 apt-get update
 apt-cache madison incus
 incus_package_version="$(apt-cache madison incus | awk "/$incus_version/{print \$3}" | head -1)"
-apt-get install -y --no-install-recommends "incus=$incus_package_version"
+apt-get install -y --no-install-recommends \
+  "incus-base=$incus_package_version" \
+  "incus-client=$incus_package_version" \
+  "incus=$incus_package_version"
 
 # install the bash completion script.
 incus completion bash >/usr/share/bash-completion/completions/incus
