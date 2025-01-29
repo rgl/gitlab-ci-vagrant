@@ -92,6 +92,7 @@ Vagrant.configure('2') do |config|
     config.vm.network :private_network, ip: CONFIG_UBUNTU_IP, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false, hyperv__bridge: 'gitlab'
     config.vm.provision :shell, path: 'configure-hyperv-guest.sh', args: [CONFIG_UBUNTU_IP]
     config.vm.provision :shell, inline: "echo '#{CONFIG_GITLAB_IP} #{CONFIG_GITLAB_FQDN}' >>/etc/hosts"
+    config.vm.provision :shell, inline: "echo '#{CONFIG_WINDOWS_IP} #{CONFIG_WINDOWS_FQDN}' >>/etc/hosts"
     config.vm.provision :shell, path: 'ubuntu/provision-resize-disk.sh'
     config.vm.provision :shell, path: 'ubuntu/provision-base.sh'
     config.vm.provision :shell, path: 'ubuntu/provision-docker.sh'
@@ -154,7 +155,7 @@ Vagrant.configure('2') do |config|
     config.vm.provision :shell, path: 'windows/ps.ps1', args: 'provision-base.ps1'
     config.vm.provision :shell, path: 'windows/ps.ps1', args: 'provision-procdump-as-postmortem-debugger.ps1'
     config.vm.provision :shell, path: 'windows/ps.ps1', args: 'provision-containers-feature.ps1', reboot: true
-    config.vm.provision :shell, path: 'windows/ps.ps1', args: 'provision-docker-ce.ps1'
+    config.vm.provision :shell, path: 'windows/ps.ps1', args: ['provision-docker-ce.ps1', CONFIG_WINDOWS_FQDN]
     config.vm.provision :shell, path: 'windows/ps.ps1', args: 'provision-docker-compose.ps1'
     config.vm.provision :shell, path: 'windows/ps.ps1', args: 'provision-vs-build-tools.ps1'
     config.vm.provision :shell, path: 'windows/ps.ps1', args: 'provision-dotnet-sdk.ps1'
@@ -165,15 +166,19 @@ Vagrant.configure('2') do |config|
   config.trigger.before :up do |trigger|
     trigger.run = {
       inline: '''bash -euc \'
-mkdir -p tmp
+install -d tmp
 artifacts=(
   ../gitlab-vagrant/tmp/gitlab-ca/gitlab-ca-crt.pem
   ../gitlab-vagrant/tmp/gitlab-ca/gitlab-ca-crt.der
+  ../gitlab-vagrant/tmp/gitlab-ca/{ubuntu,incus,lxd,windows}-crt.pem
+  ../gitlab-vagrant/tmp/gitlab-ca/{ubuntu,incus,lxd,windows}-key.{pem,p12}
+  ../gitlab-vagrant/tmp/gitlab-ca/{ubuntu,incus,lxd,windows}.*-crt.pem
+  ../gitlab-vagrant/tmp/gitlab-ca/{ubuntu,incus,lxd,windows}.*-key.{pem,p12}
   ../gitlab-vagrant/tmp/gitlab-runner-authentication-token-*.json
 )
 for artifact in "${artifacts[@]}"; do
   if [ -f $artifact ]; then
-    cp $artifact tmp
+    install $artifact tmp
   fi
 done
 \'

@@ -40,3 +40,14 @@ apt-get install -y \
 #       ERROR: Job failed: exit status 1
 #    see https://gitlab.com/gitlab-org/gitlab-runner/issues/4449
 rm -f /home/gitlab-runner/{.bash_logout,.bashrc,.profile}
+
+
+#
+# configure the docker client certificate.
+# see https://docs.docker.com/reference/cli/docker/#docker-cli-configuration-file-configjson-properties
+# see https://docs.docker.com/engine/security/protect-access
+
+install -o gitlab-runner -g gitlab-runner -m 700 -d /home/gitlab-runner/.docker
+install -o gitlab-runner -g gitlab-runner -m 444 /vagrant/tmp/gitlab-ca-crt.pem /home/gitlab-runner/.docker/ca.pem
+install -o gitlab-runner -g gitlab-runner -m 444 "/vagrant/tmp/$(hostname)-crt.pem" /home/gitlab-runner/.docker/cert.pem
+install -o gitlab-runner -g gitlab-runner -m 400 "/vagrant/tmp/$(hostname)-key.pem" /home/gitlab-runner/.docker/key.pem

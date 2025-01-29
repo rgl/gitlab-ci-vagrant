@@ -1,6 +1,8 @@
 #!/bin/bash
 set -eux
 
+domain="$(hostname --fqdn)"
+
 # see https://github.com/moby/moby/releases
 # renovate: datasource=github-releases depName=moby/moby
 docker_version='27.5.1'
@@ -24,9 +26,13 @@ docker_package_version="$(apt-cache madison docker-ce | awk "/$docker_version/{p
 apt-get install -y "docker-ce=$docker_package_version" "docker-ce-cli=$docker_package_version" containerd.io
 
 # configure it.
+# see https://docs.docker.com/engine/security/protect-access/#use-tls-https-to-protect-the-docker-daemon-socket
 systemctl stop docker
 install -m 750 -d /etc/docker
-cat >/etc/docker/daemon.json <<'EOF'
+install -m 444 /vagrant/tmp/gitlab-ca-crt.pem /etc/docker
+install -m 444 "/vagrant/tmp/$domain-crt.pem" /etc/docker
+install -m 400 "/vagrant/tmp/$domain-key.pem" /etc/docker
+cat >/etc/docker/daemon.json <<EOF
 {
     "experimental": false,
     "debug": false,
@@ -38,8 +44,13 @@ cat >/etc/docker/daemon.json <<'EOF'
         "os=linux"
     ],
     "hosts": [
-        "unix://"
-    ]
+        "unix://",
+        "tcp://0.0.0.0:2376"
+    ],
+    "tlsverify": true,
+    "tlscacert": "/etc/docker/gitlab-ca-crt.pem",
+    "tlscert": "/etc/docker/$domain-crt.pem",
+    "tlskey": "/etc/docker/$domain-key.pem"
 }
 EOF
 # start docker without any command line flags as its entirely configured from daemon.json.
@@ -54,6 +65,30 @@ systemctl start docker
 
 # let the vagrant user manage docker.
 usermod -aG docker vagrant
+
+# try using the api.
+# see https://docs.docker.com/engine/api/version-history/
+# see https://docs.docker.com/engine/api/v1.47/
+# see https://github.com/moby/moby/tree/master/api
+api_version="$(curl \
+    --silent \
+    --dump-header - \
+    --output /dev/null \
+    --key /vagrant/tmp/ubuntu-key.pem \
+    --cert /vagrant/tmp/ubuntu-crt.pem \
+    --cacert /vagrant/tmp/gitlab-ca-crt.pem \
+    "https://$domain:2376/info" \
+    | perl -nle 'print $1 if /^Api-Version:\s*(\S+)/')"
+info="$(curl \
+    --silent \
+    --key /vagrant/tmp/ubuntu-key.pem \
+    --cert /vagrant/tmp/ubuntu-crt.pem \
+    --cacert /vagrant/tmp/gitlab-ca-crt.pem \
+    "https://$domain:2376/info")"
+cat <<EOF
+Engine Version:     $(jq -r .ServerVersion <<<"$info")
+Engine Api Version: $api_version
+EOF
 
 # kick the tires.
 ctr version

@@ -119,6 +119,10 @@ function Install-GitLabRunner($runners) {
                 'Allow')))
     Set-Acl $configureGitLabRunnerServiceHome $acl
     Copy-Item C:\vagrant\windows\configure-gitlab-runner-home.ps1 $configureGitLabRunnerServiceHome
+    Copy-Item C:\vagrant\tmp\gitlab-ca-crt.pem $configureGitLabRunnerServiceHome
+    Copy-Item C:\vagrant\tmp\windows-crt.pem $configureGitLabRunnerServiceHome
+    Copy-Item C:\vagrant\tmp\windows-key.pem $configureGitLabRunnerServiceHome
+    Copy-Item C:\vagrant\tmp\windows-key.p12 $configureGitLabRunnerServiceHome
     nssm install $configureGitLabRunnerServiceName pwsh.exe
     nssm set $configureGitLabRunnerServiceName AppParameters `
         '-NoLogo' `

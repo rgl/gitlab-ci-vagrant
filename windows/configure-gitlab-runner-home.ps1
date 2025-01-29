@@ -10,6 +10,21 @@ trap {
     Exit 1
 }
 
+# configure the docker client through a configuration file.
+# see https://docs.docker.com/reference/cli/docker/#docker-cli-configuration-file-configjson-properties
+# see https://docs.docker.com/engine/security/protect-access
+$homePath = (Resolve-Path ~).Path
+mkdir "$homePath\.docker" | Out-Null
+Copy-Item gitlab-ca-crt.pem "$homePath\.docker\ca.pem"
+Copy-Item windows-crt.pem "$homePath\.docker\cert.pem"
+Copy-Item windows-key.pem "$homePath\.docker\key.pem"
+$config = @{
+    'tlscacert' = "$homePath\.docker\ca.pem"
+    'tlscert' = "$homePath\.docker\cert.pem"
+    'tlskey' = "$homePath\.docker\key.pem"
+}
+Set-Content -Encoding ascii "$homePath\.docker\config.json" ($config | ConvertTo-Json -Depth 100)
+
 # install the sourcelink dotnet global tool.
 # NB this is installed at %USERPROFILE%\.dotnet\tools.
 # see https://github.com/dotnet/sourcelink
