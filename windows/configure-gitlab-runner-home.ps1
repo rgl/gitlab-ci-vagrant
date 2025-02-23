@@ -45,5 +45,5 @@ dotnet tool install --global dotnet-xunit-to-junit --version $dotnetXunitToJunit
 # see https://github.com/danielpalme/ReportGenerator
 # see https://www.nuget.org/packages/dotnet-reportgenerator-globaltool
 # renovate: datasource=nuget depName=dotnet-reportgenerator-globaltool
-$dotnetReportgeneratorGlobaltoolVersion = '5.4.3'
+$dotnetReportgeneratorGlobaltoolVersion = '5.4.4'
 dotnet tool install --global dotnet-reportgenerator-globaltool --version $dotnetReportgeneratorGlobaltoolVersion
