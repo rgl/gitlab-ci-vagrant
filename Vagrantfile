@@ -146,7 +146,7 @@ Vagrant.configure('2') do |config|
     config.vm.provider :hyperv do |hv|
       hv.memory = 4*1024
     end
-    config.vm.box = 'windows-2022-amd64'
+    config.vm.box = 'windows-2022-uefi-amd64'
     config.vm.hostname = 'windows'
     config.vm.network :private_network, ip: CONFIG_WINDOWS_IP, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false, hyperv__bridge: 'gitlab'
     config.vm.provision :shell, path: 'configure-hyperv-guest.ps1', args: [CONFIG_WINDOWS_IP]
