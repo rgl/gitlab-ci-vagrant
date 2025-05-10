@@ -3,7 +3,7 @@ choco install -y procdump
 
 #
 # create the dumps storage directory.
-# NB the dumps in this directory can be analysed with:
+# NB the dumps in this directory can be analyzed with:
 #       * cdb/WinDbg https://learn.microsoft.com/en-us/windows-hardware/drivers/debugger/debugger-download-tools
 #       * https://github.com/x64dbg/x64dbg
 #       * Visual Studio Debugger
@@ -74,4 +74,38 @@ Set-ItemProperty `
 #       &"C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\cdb.exe" -nosqm -z C:\dumps\raise-illegal-instruction-c.exe_190801_184222.dmp -c '!peb;q'
 #    see https://learn.microsoft.com/en-us/windows-hardware/drivers/debugger/extracting-information-from-a-dump-file
 # NB this should correspond to Microsoft.VisualStudio.Component.Windows10SDK.19041 as installed by vs build tools in provision-vs-build-tools.ps1.
-choco install -y windows-sdk-10-version-2004-windbg
+# NB windows-sdk-10-version-2004-windbg is no longer listed in https://community.chocolatey.org/packages/windows-sdk-10-version-2004-windbg,
+#    so we manually install it from the windows sdk that is installed at provision-vs-build-tools.ps1.
+#choco install -y windows-sdk-10-version-2004-windbg
+function Get-WindowsSdkSetupPath {
+    @(
+        "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*"
+        "HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*"
+    ) `
+        | ForEach-Object {
+            Get-ItemProperty $_ `
+                | Where-Object { $_.PSObject.Properties.Name -eq 'DisplayName' } `
+                | Where-Object { $_.DisplayName -like 'Windows Software Development Kit *' } `
+                | Where-Object { $_.UninstallString } `
+                | ForEach-Object {
+                    if ($_.UninstallString -match '"(.+)"') {
+                        # e.g. C:\ProgramData\Package Cache\{4591faf1-a2db-4a3d-bfda-aa5a4ebb1587}\winsdksetup.exe
+                        $Matches[1]
+                    }
+                }
+        } `
+        | Select-Object -First 1
+}
+$logPath = "$env:TEMP\WindowsSdkSetup.WindowsDesktopDebuggers.log"
+$windowsSdkSetupPath = Get-WindowsSdkSetupPath
+&$windowsSdkSetupPath `
+    /features OptionId.WindowsDesktopDebuggers `
+    /quiet `
+    /norestart `
+    /log $logPath `
+    | Out-String -Stream
+$cdbPath = "C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\cdb.exe"
+if (!(Test-Path $cdbPath)) {
+    throw "Failed to install debugging tools for windows because $cdbPath was not found. Check the installation log at $logPath."
+}
+Remove-Item $logPath

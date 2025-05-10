@@ -153,12 +153,12 @@ Vagrant.configure('2') do |config|
     config.vm.provision :shell, path: 'windows/ps.ps1', args: ['provision-dns-client.ps1', CONFIG_GITLAB_IP]
     config.vm.provision :shell, path: 'windows/ps.ps1', args: 'provision-chocolatey.ps1'
     config.vm.provision :shell, path: 'windows/ps.ps1', args: 'provision-base.ps1'
-    config.vm.provision :shell, path: 'windows/ps.ps1', args: 'provision-procdump-as-postmortem-debugger.ps1'
     config.vm.provision :shell, path: 'windows/ps.ps1', args: 'provision-containers-feature.ps1', reboot: true
     config.vm.provision :shell, path: 'windows/ps.ps1', args: ['provision-docker-ce.ps1', CONFIG_WINDOWS_FQDN]
     config.vm.provision :shell, path: 'windows/ps.ps1', args: 'provision-docker-compose.ps1'
     config.vm.provision :shell, path: 'windows/ps.ps1', args: 'provision-vs-build-tools.ps1'
     config.vm.provision :shell, path: 'windows/ps.ps1', args: 'provision-dotnet-sdk.ps1'
+    config.vm.provision :shell, path: 'windows/ps.ps1', args: 'provision-procdump-as-postmortem-debugger.ps1'
     config.vm.provision :shell, path: 'windows/ps.ps1', args: ['provision-gitlab-runner.ps1', CONFIG_GITLAB_FQDN, CONFIG_WINDOWS_FQDN, GITLAB_RUNNER_VERSION], reboot: true
     config.vm.provision :shell, path: 'windows/ps.ps1', args: 'summary.ps1'
   end
