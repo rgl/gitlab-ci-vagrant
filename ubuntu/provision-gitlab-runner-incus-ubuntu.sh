@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euxo pipefail
 
-gitlab_runner_version="${1:-17.11.1}"; shift || true
+gitlab_runner_version="${1:-18.0.2}"; shift || true
 docker_version="${1:-28.1.1}"; shift || true
 docker_compose_version="${1:-2.36.2}"; shift || true
 os_name="$(lsb_release -si)"
@@ -31,6 +31,9 @@ incus config set $image_name \
     security.syscalls.intercept.setxattr=true
 # TODO set the container resources (e.g. cpu, memory)?
 incus start $image_name
+incus file push \
+    /vagrant/tmp/gitlab-ca-crt.pem \
+    "$image_name/usr/local/share/ca-certificates/gitlab-ca.crt"
 incus exec $image_name \
     --env "gitlab_runner_version=$gitlab_runner_version" \
     --env "docker_version=$docker_version" \
@@ -50,6 +53,9 @@ function wait-for-system-running {
     return 1
 }
 wait-for-system-running
+
+# update the ca certificates.
+update-ca-certificates
 
 # install dependencies.
 apt-get update

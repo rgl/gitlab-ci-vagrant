@@ -12,7 +12,7 @@ config_gitlab_runner_authentication_token="$(
 
 # configure the incus runner.
 # see https://docs.gitlab.com/runner/executors/custom.html
-# see https://docs.gitlab.com/runner/executors/custom_examples/incus.html
+# see https://docs.gitlab.com/runner/executors/custom_examples/lxd.html
 # see https://docs.gitlab.com/runner/configuration/feature-flags.html
 # see https://docs.gitlab.com/ee/ci/jobs/job_logs.html#job-log-timestamps
 install -d /opt/gitlab-runner-incus
