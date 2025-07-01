@@ -98,8 +98,7 @@ Vagrant.configure('2') do |config|
     config.vm.hostname = CONFIG_UBUNTU_FQDN
     config.vm.network :private_network, ip: CONFIG_UBUNTU_IP, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false, hyperv__bridge: 'gitlab'
     config.vm.provision :shell, path: 'configure-hyperv-guest.sh', args: [CONFIG_UBUNTU_IP]
-    config.vm.provision :shell, inline: "echo '#{CONFIG_GITLAB_IP} #{CONFIG_GITLAB_FQDN}' >>/etc/hosts"
-    config.vm.provision :shell, inline: "echo '#{CONFIG_WINDOWS_IP} #{CONFIG_WINDOWS_FQDN}' >>/etc/hosts"
+    config.vm.provision :shell, path: 'ubuntu/provision-dns-client.sh', args: [CONFIG_GITLAB_IP]
     config.vm.provision :shell, path: 'ubuntu/provision-resize-disk.sh'
     config.vm.provision :shell, path: 'ubuntu/provision-base.sh'
     config.vm.provision :shell, path: 'ubuntu/provision-docker.sh'
@@ -123,7 +122,7 @@ Vagrant.configure('2') do |config|
     config.vm.hostname = CONFIG_INCUS_FQDN
     config.vm.network :private_network, ip: CONFIG_INCUS_IP, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false, hyperv__bridge: 'gitlab'
     config.vm.provision :shell, path: 'configure-hyperv-guest.sh', args: [CONFIG_INCUS_IP]
-    config.vm.provision :shell, inline: "echo '#{CONFIG_GITLAB_IP} #{CONFIG_GITLAB_FQDN}' >>/etc/hosts"
+    config.vm.provision :shell, path: 'ubuntu/provision-dns-client.sh', args: [CONFIG_GITLAB_IP]
     config.vm.provision :shell, path: 'ubuntu/provision-resize-disk.sh'
     config.vm.provision :shell, path: 'ubuntu/provision-base.sh'
     config.vm.provision :shell, path: 'ubuntu/provision-incus.sh', args: [INCUS_VERSION, INCUS_STORAGE_DRIVER]
@@ -144,7 +143,7 @@ Vagrant.configure('2') do |config|
     config.vm.hostname = CONFIG_LXD_FQDN
     config.vm.network :private_network, ip: CONFIG_LXD_IP, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false, hyperv__bridge: 'gitlab'
     config.vm.provision :shell, path: 'configure-hyperv-guest.sh', args: [CONFIG_LXD_IP]
-    config.vm.provision :shell, inline: "echo '#{CONFIG_GITLAB_IP} #{CONFIG_GITLAB_FQDN}' >>/etc/hosts"
+    config.vm.provision :shell, path: 'ubuntu/provision-dns-client.sh', args: [CONFIG_GITLAB_IP]
     config.vm.provision :shell, path: 'ubuntu/provision-resize-disk.sh'
     config.vm.provision :shell, path: 'ubuntu/provision-base.sh'
     config.vm.provision :shell, path: 'ubuntu/provision-lxd.sh'
