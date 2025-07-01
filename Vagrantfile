@@ -89,7 +89,12 @@ Vagrant.configure('2') do |config|
   end
 
   config.vm.define :ubuntu do |config|
-    config.vm.box = 'ubuntu-22.04-uefi-amd64'
+    config.vm.provider :libvirt do |lv, config|
+      config.vm.box = 'ubuntu-22.04-uefi-amd64'
+    end
+    config.vm.provider :hyperv do |hv, config|
+      config.vm.box = 'ubuntu-22.04-amd64'
+    end
     config.vm.hostname = CONFIG_UBUNTU_FQDN
     config.vm.network :private_network, ip: CONFIG_UBUNTU_IP, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false, hyperv__bridge: 'gitlab'
     config.vm.provision :shell, path: 'configure-hyperv-guest.sh', args: [CONFIG_UBUNTU_IP]
@@ -109,11 +114,12 @@ Vagrant.configure('2') do |config|
   config.vm.define :incus do |config|
     config.vm.provider :libvirt do |lv, config|
       lv.storage :file, :serial => 'incus', :size => '60G', :bus => 'scsi', :discard => 'unmap', :cache => 'unsafe'
+      config.vm.box = 'ubuntu-22.04-uefi-amd64'
     end
     config.vm.provider :hyperv do |hv, config|
+      config.vm.box = 'ubuntu-22.04-amd64'
       config.vm.disk :disk, name: 'incus', size: '60GB'
     end
-    config.vm.box = 'ubuntu-22.04-uefi-amd64'
     config.vm.hostname = CONFIG_INCUS_FQDN
     config.vm.network :private_network, ip: CONFIG_INCUS_IP, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false, hyperv__bridge: 'gitlab'
     config.vm.provision :shell, path: 'configure-hyperv-guest.sh', args: [CONFIG_INCUS_IP]
@@ -129,11 +135,12 @@ Vagrant.configure('2') do |config|
   config.vm.define :lxd do |config|
     config.vm.provider :libvirt do |lv, config|
       lv.storage :file, :serial => 'lxd', :size => '60G', :bus => 'scsi', :discard => 'unmap', :cache => 'unsafe'
+      config.vm.box = 'ubuntu-22.04-uefi-amd64'
     end
     config.vm.provider :hyperv do |hv, config|
+      config.vm.box = 'ubuntu-22.04-amd64'
       config.vm.disk :disk, name: 'lxd', size: '60GB'
     end
-    config.vm.box = 'ubuntu-22.04-uefi-amd64'
     config.vm.hostname = CONFIG_LXD_FQDN
     config.vm.network :private_network, ip: CONFIG_LXD_IP, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false, hyperv__bridge: 'gitlab'
     config.vm.provision :shell, path: 'configure-hyperv-guest.sh', args: [CONFIG_LXD_IP]
@@ -150,12 +157,13 @@ Vagrant.configure('2') do |config|
     config.vm.provider :libvirt do |lv, config|
       lv.memory = 4*1024
       lv.machine_virtual_size = CONFIG_WINDOWS_OS_DISK_SIZE_GB
+      config.vm.box = 'windows-2022-uefi-amd64'
       config.vm.synced_folder '.', '/vagrant', type: 'smb', smb_username: ENV['USER'], smb_password: ENV['VAGRANT_SMB_PASSWORD']
     end
     config.vm.provider :hyperv do |hv|
       hv.memory = 4*1024
+      config.vm.box = 'windows-2022-amd64'
     end
-    config.vm.box = 'windows-2022-uefi-amd64'
     config.vm.hostname = 'windows'
     config.vm.network :private_network, ip: CONFIG_WINDOWS_IP, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false, hyperv__bridge: 'gitlab'
     config.vm.provision :shell, path: 'configure-hyperv-guest.ps1', args: [CONFIG_WINDOWS_IP]
