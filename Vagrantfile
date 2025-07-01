@@ -110,6 +110,9 @@ Vagrant.configure('2') do |config|
     config.vm.provider :libvirt do |lv, config|
       lv.storage :file, :serial => 'incus', :size => '60G', :bus => 'scsi', :discard => 'unmap', :cache => 'unsafe'
     end
+    config.vm.provider :hyperv do |hv, config|
+      config.vm.disk :disk, name: 'incus', size: '60GB'
+    end
     config.vm.box = 'ubuntu-22.04-uefi-amd64'
     config.vm.hostname = CONFIG_INCUS_FQDN
     config.vm.network :private_network, ip: CONFIG_INCUS_IP, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false, hyperv__bridge: 'gitlab'
@@ -126,6 +129,9 @@ Vagrant.configure('2') do |config|
   config.vm.define :lxd do |config|
     config.vm.provider :libvirt do |lv, config|
       lv.storage :file, :serial => 'lxd', :size => '60G', :bus => 'scsi', :discard => 'unmap', :cache => 'unsafe'
+    end
+    config.vm.provider :hyperv do |hv, config|
+      config.vm.disk :disk, name: 'lxd', size: '60GB'
     end
     config.vm.box = 'ubuntu-22.04-uefi-amd64'
     config.vm.hostname = CONFIG_LXD_FQDN

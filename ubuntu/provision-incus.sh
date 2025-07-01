@@ -3,7 +3,13 @@ set -euxo pipefail
 
 incus_version="${1:-6.14}"; shift || true
 storage_driver="${1:-btrfs}"; shift || true
-storage_device='/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_incus'
+
+dmi_sys_vendor="$(cat /sys/devices/virtual/dmi/id/sys_vendor)"
+if [ "$dmi_sys_vendor" == 'Microsoft Corporation' ]; then
+  storage_device='/dev/disk/by-path/acpi-MSFT1000:00-scsi-0:0:0:1'
+else
+  storage_device='/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_incus'
+fi
 
 # set to 1 to use --debug in incusd and incus admin init.
 INCUS_ENABLE_DEBUG='0'
@@ -18,7 +24,7 @@ elif [ "$storage_driver" == "zfs" ]; then
   sed -i -E 's,^(deb(-src)? .+),\1 contrib,g' /etc/apt/sources.list
   apt-get update
   # configure the system to accept the zfs incompatible licenses.
-  # these anwsers were obtained (after installing zfs-dkms) with:
+  # these answers were obtained (after installing zfs-dkms) with:
   #   #sudo debconf-show zfs-dkms
   #   sudo apt-get install debconf-utils
   #   # this way you can see the comments:

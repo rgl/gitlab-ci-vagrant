@@ -9,7 +9,12 @@ set -euxo pipefail
 apt-get install -y zfsutils-linux
 
 # this will be used for the lxd storage.
-storage_device='/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_lxd'
+dmi_sys_vendor="$(cat /sys/devices/virtual/dmi/id/sys_vendor)"
+if [ "$dmi_sys_vendor" == 'Microsoft Corporation' ]; then
+  storage_device='/dev/disk/by-path/acpi-MSFT1000:00-scsi-0:0:0:1'
+else
+  storage_device='/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_lxd'
+fi
 
 # init lxd.
 lxd init --preseed <<EOF
