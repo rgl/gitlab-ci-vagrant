@@ -32,7 +32,8 @@ CONFIG_LXD_IP       = '10.10.9.96'
 CONFIG_WINDOWS_FQDN = "windows.#{CONFIG_GITLAB_FQDN}"
 CONFIG_WINDOWS_IP   = '10.10.9.95'
 
-CONFIG_OS_DISK_SIZE_GB = 32
+CONFIG_OS_DISK_SIZE_GB          = 32
+CONFIG_WINDOWS_OS_DISK_SIZE_GB  = 80
 
 Vagrant.configure('2') do |config|
   config.vm.provider :libvirt do |lv, config|
@@ -80,6 +81,7 @@ Vagrant.configure('2') do |config|
           '-File',
           'configure-hyperv-vm.ps1',
           machine.id,
+          (machine.config.vm.box =~ /windows/i ? CONFIG_WINDOWS_OS_DISK_SIZE_GB : CONFIG_OS_DISK_SIZE_GB).to_s,
           bridges.to_json
         ) or raise "failed to configure hyper-v vm with exit code #{$?.exitstatus}"
       end
@@ -141,6 +143,7 @@ Vagrant.configure('2') do |config|
   config.vm.define :windows do |config|
     config.vm.provider :libvirt do |lv, config|
       lv.memory = 4*1024
+      lv.machine_virtual_size = CONFIG_WINDOWS_OS_DISK_SIZE_GB
       config.vm.synced_folder '.', '/vagrant', type: 'smb', smb_username: ENV['USER'], smb_password: ENV['VAGRANT_SMB_PASSWORD']
     end
     config.vm.provider :hyperv do |hv|
