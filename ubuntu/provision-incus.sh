@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euxo pipefail
 
-incus_version="${1:-6.14}"; shift || true
+incus_version="${1:-6.15}"; shift || true
 storage_driver="${1:-btrfs}"; shift || true
 
 dmi_sys_vendor="$(cat /sys/devices/virtual/dmi/id/sys_vendor)"
