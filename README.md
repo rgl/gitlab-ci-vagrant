@@ -20,10 +20,6 @@ This includes:
   * `incus` runner.
     * Docker and Docker Compose.
     * Runs jobs in ephemeral system containers.
-* `lxd` node.
-  * `lxd` runner.
-    * Docker and Docker Compose.
-    * Runs jobs in ephemeral system containers.
 * `windows` node:
   * `shell` runner.
     * Docker and Docker Compose.
@@ -42,7 +38,6 @@ At this repository directory, start the runner nodes:
 ```bash
 vagrant up --no-destroy-on-error ubuntu
 vagrant up --no-destroy-on-error incus
-vagrant up --no-destroy-on-error lxd
 vagrant up --no-destroy-on-error windows
 ```
 
