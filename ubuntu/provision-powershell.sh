@@ -10,7 +10,7 @@ source /etc/profile.d/opt-out-powershell-telemetry.sh
 # see https://learn.microsoft.com/en-us/powershell/scripting/install/install-ubuntu?view=powershell-7.4
 # see https://github.com/PowerShell/PowerShell/releases
 # renovate: datasource=deb:microsoft depName=powershell extractVersion=^(?<version>7\.4\..+)-1\.deb$
-powershell_version='7.4.11'
+powershell_version='7.4.12'
 wget -qO packages-microsoft-prod.deb "https://packages.microsoft.com/config/ubuntu/$(lsb_release -s -r)/packages-microsoft-prod.deb"
 dpkg -i packages-microsoft-prod.deb
 rm packages-microsoft-prod.deb
