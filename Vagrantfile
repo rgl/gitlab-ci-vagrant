@@ -4,7 +4,7 @@ ENV['VAGRANT_EXPERIMENTAL'] = 'typed_triggers'
 # NB execute apt-cache madison gitlab-runner to known the available versions.
 #    also see https://gitlab.com/gitlab-org/gitlab-runner/-/tags
 # renovate: datasource=gitlab-tags depName=gitlab-org/gitlab-runner
-GITLAB_RUNNER_VERSION = '18.4.0'
+GITLAB_RUNNER_VERSION = '18.5.0'
 
 # see https://github.com/lxc/incus/releases
 # NB incus tag has a three component version number of MAJOR.MINOR.PATCH but the
