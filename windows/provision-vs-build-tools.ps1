@@ -1,7 +1,7 @@
 # add support for building applications that target the .net 4.8 framework.
 choco install -y netfx-4.8-devpack
 
-# install the Visual Studio Build Tools 2022 17.12.12.
+# install the Visual Studio Build Tools 2022 17.12.13.
 # see https://learn.microsoft.com/en-us/visualstudio/releases/2022/release-history#fixed-version-bootstrappers
 # see https://learn.microsoft.com/en-us/visualstudio/releases/2022/release-notes
 # see https://learn.microsoft.com/en-us/visualstudio/install/use-command-line-parameters-to-install-visual-studio?view=vs-2022
@@ -9,8 +9,8 @@ choco install -y netfx-4.8-devpack
 # see https://learn.microsoft.com/en-us/visualstudio/install/workload-and-component-ids?view=vs-2022
 # see https://learn.microsoft.com/en-us/visualstudio/install/workload-component-id-vs-build-tools?view=vs-2022
 # NB update the windbg version in provision-procdump-as-postmortem-debugger.ps1 to match the installed Windows10SDK.19041.
-$archiveUrl = 'https://download.visualstudio.microsoft.com/download/pr/8eb6bd5d-4ec9-4328-a0e7-f59e7e51fdca/9b748c66ba6a2b22f346cc113f354ded3b202b53a109fff93111167741acb6c1/vs_BuildTools.exe'
-$archiveHash = '9b748c66ba6a2b22f346cc113f354ded3b202b53a109fff93111167741acb6c1'
+$archiveUrl = 'https://download.visualstudio.microsoft.com/download/pr/a5f47ff8-ce7c-40ca-9680-001a0bdf0a11/662a2d989b56cce5ff88da7ebbe353c288a1dd3ddc4d2977a9b5d2e6e0d69a19/vs_BuildTools.exe'
+$archiveHash = '662a2d989b56cce5ff88da7ebbe353c288a1dd3ddc4d2977a9b5d2e6e0d69a19'
 $archiveName = Split-Path $archiveUrl -Leaf
 $archivePath = "$env:TEMP\$archiveName"
 Write-Host 'Downloading the Visual Studio Build Tools Setup Bootstrapper...'
