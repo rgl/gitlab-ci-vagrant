@@ -88,10 +88,10 @@ Vagrant.configure('2') do |config|
 
   config.vm.define :ubuntu do |config|
     config.vm.provider :libvirt do |lv, config|
-      config.vm.box = 'ubuntu-22.04-uefi-amd64'
+      config.vm.box = 'ubuntu-24.04-uefi-amd64'
     end
     config.vm.provider :hyperv do |hv, config|
-      config.vm.box = 'ubuntu-22.04-amd64'
+      config.vm.box = 'ubuntu-24.04-amd64'
     end
     config.vm.hostname = CONFIG_UBUNTU_FQDN
     config.vm.network :private_network, ip: CONFIG_UBUNTU_IP, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false, hyperv__bridge: 'gitlab'
@@ -111,10 +111,10 @@ Vagrant.configure('2') do |config|
   config.vm.define :incus do |config|
     config.vm.provider :libvirt do |lv, config|
       lv.storage :file, :serial => 'incus', :size => '60G', :bus => 'scsi', :discard => 'unmap', :cache => 'unsafe'
-      config.vm.box = 'ubuntu-22.04-uefi-amd64'
+      config.vm.box = 'ubuntu-24.04-uefi-amd64'
     end
     config.vm.provider :hyperv do |hv, config|
-      config.vm.box = 'ubuntu-22.04-amd64'
+      config.vm.box = 'ubuntu-24.04-amd64'
       config.vm.disk :disk, name: 'incus', size: '60GB'
     end
     config.vm.hostname = CONFIG_INCUS_FQDN
