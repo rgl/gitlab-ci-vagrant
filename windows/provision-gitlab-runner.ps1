@@ -227,7 +227,6 @@ function Install-GitLabRunner($runners) {
                 --config $gitLabRunnerConfigPath `
                 --url "https://$config_gitlab_fqdn" `
                 --token $gitLabRunnerAuthenticationToken `
-                --env 'FF_TIMESTAMPS=true' `
                 @($_.Value)
             if ($LASTEXITCODE) {
                 throw "failed to register $gitLabRunnerAccountName with exit code $LASTEXITCODE"

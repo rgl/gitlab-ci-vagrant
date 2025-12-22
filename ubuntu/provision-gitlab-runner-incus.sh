@@ -26,7 +26,6 @@ gitlab-runner \
     --non-interactive \
     --url "https://$config_gitlab_fqdn" \
     --token "$config_gitlab_runner_authentication_token" \
-    --env 'FF_TIMESTAMPS=true' \
     --builds-dir /builds \
     --cache-dir /cache \
     --executor custom \
