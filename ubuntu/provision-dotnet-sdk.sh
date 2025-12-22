@@ -5,8 +5,8 @@ set -euxo pipefail
 echo 'export DOTNET_CLI_TELEMETRY_OPTOUT=1' >/etc/profile.d/opt-out-dotnet-cli-telemetry.sh
 source /etc/profile.d/opt-out-dotnet-cli-telemetry.sh
 
-# install the dotnet core sdk.
-apt-get install -y dotnet-sdk-8.0
+# install the dotnet sdk.
+apt-get install -y dotnet-sdk-10.0
 
 # show versions.
 dotnet --info
