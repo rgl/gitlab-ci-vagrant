@@ -1,7 +1,7 @@
 # add support for building applications that target the .net 4.8 framework.
 choco install -y netfx-4.8-devpack
 
-# install the Visual Studio Build Tools 2026 18.2.0.
+# install the Visual Studio Build Tools 2026 18.2.1.
 # see https://learn.microsoft.com/en-us/visualstudio/releases/2026/release-history#release-dates-and-build-numbers
 # see https://learn.microsoft.com/en-us/visualstudio/releases/2026/release-notes
 # see https://learn.microsoft.com/en-us/visualstudio/install/use-command-line-parameters-to-install-visual-studio?view=visualstudio
@@ -9,8 +9,8 @@ choco install -y netfx-4.8-devpack
 # see https://learn.microsoft.com/en-us/visualstudio/install/workload-and-component-ids?view=visualstudio
 # see https://learn.microsoft.com/en-us/visualstudio/install/workload-component-id-vs-build-tools?view=visualstudio
 # NB update the windbg version in provision-procdump-as-postmortem-debugger.ps1 to match the installed Windows11SDK.26100.
-$archiveUrl = 'https://download.visualstudio.microsoft.com/download/pr/83a2d131-5e82-4f5c-b9c3-a83a3d02012e/4674ec4e366a2fd86504f15a64198dd401ceaa909e6d420205b1bc25a353a37b/vs_BuildTools.exe'
-$archiveHash = '4674ec4e366a2fd86504f15a64198dd401ceaa909e6d420205b1bc25a353a37b'
+$archiveUrl = 'https://download.visualstudio.microsoft.com/download/pr/98009c04-e4b8-4223-8794-58f961de75a4/66275a026e820f22468a0dab1a4ae9231ef95592e00d3fc50d0cb36fcd8fcfac/vs_BuildTools.exe'
+$archiveHash = '66275a026e820f22468a0dab1a4ae9231ef95592e00d3fc50d0cb36fcd8fcfac'
 $archiveName = Split-Path $archiveUrl -Leaf
 $archivePath = "$env:TEMP\$archiveName"
 Write-Host 'Downloading the Visual Studio Build Tools Setup Bootstrapper...'
