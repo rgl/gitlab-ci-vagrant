@@ -7,7 +7,7 @@ $archiveName = Split-Path -Leaf $archiveUrl
 $archivePath = "$env:TEMP\$archiveName"
 Write-Host "Installing docker-compose $archiveVersion..."
 (New-Object System.Net.WebClient).DownloadFile($archiveUrl, $archivePath)
-$dockerCliPluginsPath = "$env:ProgramData\docker\cli-plugins"
+$dockerCliPluginsPath = "$env:ProgramFiles\Docker\cli-plugins"
 mkdir -Force $dockerCliPluginsPath | Out-Null
 Move-Item -Force $archivePath "$dockerCliPluginsPath\docker-compose.exe"
 # ensure that all the plugins inherit the parent directory permissions.
