@@ -302,7 +302,7 @@ Install-GitLabRunner @{
         '--description'
             "Docker / Windows $($windowsContainers.tag)"
         '--docker-image'
-            $windowsContainers.pwsh
+            $windowsContainers.dotnetSdk
         '--docker-extra-hosts'
             "$config_gitlab_fqdn`:$config_gitlab_ip"
     )

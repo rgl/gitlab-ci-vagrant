@@ -28,12 +28,19 @@ function Write-Title($title) {
 # see https://hub.docker.com/_/microsoft-windows-server
 # see https://hub.docker.com/_/microsoft-windows
 # see https://hub.docker.com/_/microsoft-powershell
+# see https://mcr.microsoft.com/en-us/artifact/mar/windows/nanoserver/tags
 # see https://mcr.microsoft.com/v2/windows/nanoserver/tags/list
+# see https://mcr.microsoft.com/en-us/artifact/mar/windows/servercore/tags
 # see https://mcr.microsoft.com/v2/windows/servercore/tags/list
+# see https://mcr.microsoft.com/en-us/artifact/mar/windows/server/tags
 # see https://mcr.microsoft.com/v2/windows/server/tags/list
+# see https://mcr.microsoft.com/en-us/artifact/mar/windows/tags
 # see https://mcr.microsoft.com/v2/windows/tags/list
+# see https://mcr.microsoft.com/en-us/artifact/mar/powershell/tags
 # see https://mcr.microsoft.com/v2/powershell/tags/list
+# see https://mcr.microsoft.com/en-us/artifact/mar/dotnet/sdk/tags
 # see https://mcr.microsoft.com/v2/dotnet/sdk/tags/list
+# see https://mcr.microsoft.com/en-us/artifact/mar/dotnet/runtime/tags
 # see https://mcr.microsoft.com/v2/dotnet/runtime/tags/list
 # see https://learn.microsoft.com/en-us/windows/release-health/
 # see https://learn.microsoft.com/en-us/windows/release-health/windows-server-release-info
@@ -54,7 +61,7 @@ function Get-WindowsContainers {
         } else {
             "mcr.microsoft.com/windows:$windowsVersionTag"
         }
-        pwsh = "mcr.microsoft.com/powershell:7.4-windowsservercore-$windowsVersionTag"
+        dotnetSdk = "mcr.microsoft.com/dotnet/sdk:10.0-windowsservercore-$windowsVersionTag"
     }
 }
 
