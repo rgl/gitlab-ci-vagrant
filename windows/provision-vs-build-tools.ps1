@@ -1,5 +1,5 @@
-# add support for building applications that target the .net 4.8 framework.
-choco install -y netfx-4.8-devpack
+# add support for building applications that target the .net framework 4.8.1.
+choco install -y netfx-4.8.1-devpack
 
 # install the Visual Studio Build Tools 2026 18.4.1.
 # see https://learn.microsoft.com/en-us/visualstudio/releases/2026/release-history#release-dates-and-build-numbers
