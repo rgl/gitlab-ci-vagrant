@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euxo pipefail
 
-gitlab_runner_version="${1:-18.10.0}"; shift || true
+gitlab_runner_version="${1:-18.11.1}"; shift || true
 docker_version="${1:-29.4.1}"; shift || true
 docker_compose_version="${1:-5.1.3}"; shift || true
 os_name="$(lsb_release -si)"
