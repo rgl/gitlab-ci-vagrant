@@ -62,6 +62,16 @@ apt-get install -y git-core
 
 
 #
+# install git-lfs.
+# see https://docs.gitlab.com/administration/lfs/
+# see https://docs.gitlab.com/topics/git/lfs/
+# see https://github.com/github/git-lfs/wiki/Installation
+
+curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash
+apt-get install -y git-lfs
+
+
+#
 # install jq.
 
 apt-get install -y jq

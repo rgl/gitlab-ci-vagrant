@@ -16,6 +16,7 @@ Import-Module Carbon
 
 # install git and related applications.
 choco install -y git --params '/GitOnlyOnPath /NoAutoCrlf /SChannel'
+choco install -y git-lfs
 choco install -y gitextensions
 choco install -y meld
 
